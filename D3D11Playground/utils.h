@@ -2,10 +2,12 @@
 
 #include <string>
 
+#include <Windows.h>
+
 class AppError
 {
 public:
-	AppError(std::wstring reason) : reason_(reason)
+	AppError(const std::wstring& reason) : reason_(reason)
 	{
 	}
 
@@ -16,3 +18,15 @@ public:
 private:
 	std::wstring reason_;
 };
+
+template<typename T>
+void SafeRelease(T* &obj)
+{
+	if (obj)
+	{
+		obj->Release();
+		obj = nullptr;
+	}
+}
+
+void AssertSucceed(HRESULT hr, const std::wstring& message);

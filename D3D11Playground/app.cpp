@@ -1,8 +1,10 @@
 #include "app.h"
 
 #include <iostream>
+#include <chrono>
 
 #include "utils.h"
+#include "engine.h"
 
 using namespace std;
 
@@ -30,6 +32,7 @@ void App::OnResizeWindow(int width, int height)
 	height = max(height, 1);
 
 	wcout << "App::OnResizeWindow width:" << width << ", height:" << height << endl;
+	Engine::Instance().OnResizeWindow(width, height);
 }
 
 void App::Init(const wstring& window_title, int width, int height)
@@ -38,12 +41,17 @@ void App::Init(const wstring& window_title, int width, int height)
 	window_class_name_ = window_title_ + L"_game_engine";
 
 	InitWindow(width, height);
+	Engine::Instance().Init(main_hwnd_, width, height);
 }
 
 void App::EnterMainLoop()
 {
 	ShowWindow(main_hwnd_, SW_SHOWDEFAULT);
 	UpdateWindow(main_hwnd_);
+
+	chrono::time_point<chrono::steady_clock> last_frame_time = chrono::steady_clock::now();
+	int frame_count = 0;
+	chrono::duration<double> frame_timer(0);
 
 	MSG msg;
 	for (;;)
@@ -57,13 +65,30 @@ void App::EnterMainLoop()
 		}
 		else
 		{
+			chrono::time_point<chrono::steady_clock> current_frame_time 
+				= chrono::steady_clock::now();
+			chrono::duration<double> delta_time = current_frame_time - last_frame_time;
 
+			Engine::Instance().OnTick(delta_time.count());
+
+			last_frame_time = current_frame_time;
+			frame_timer += delta_time;
+			++frame_count;
+			if (frame_timer > chrono::seconds(1))
+			{
+				frame_timer = chrono::seconds(0);
+				SetWindowText(main_hwnd_, (window_title_
+					+ L" (FPS: " + to_wstring(frame_count)
+					+ L")").c_str());
+				frame_count = 0;
+			}
 		}
 	}
 }
 
 void App::Dispose()
 {
+	Engine::Instance().Dispose();
 	UnregisterClass(window_class_name_.c_str(), GetModuleHandle(0));
 }
 
