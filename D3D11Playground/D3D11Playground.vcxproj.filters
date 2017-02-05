@@ -87,10 +87,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\default_ps.hlsl">
+    <FxCompile Include="shaders\quad_ps.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\default_vs.hlsl">
+    <FxCompile Include="shaders\quad_vs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\quad_ds.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\quad_hs.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>

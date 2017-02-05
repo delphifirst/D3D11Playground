@@ -29,6 +29,8 @@ Resource::~Resource()
 	SafeRelease(vertex_buffer_);
 	for (ID3D11Buffer* buffer : vs_cbuffers_)
 		SafeRelease(buffer);
+	for (ID3D11Buffer* buffer : ds_cbuffers_)
+		SafeRelease(buffer);
 	for (ID3D11ShaderResourceView* texture_view : ps_texture_views_)
 		SafeRelease(texture_view);
 }
@@ -41,6 +43,10 @@ void Resource::AddCBuffer(ShaderType shader, int bytes)
 	case ShaderType::VS:
 		vs_cbuffers_.emplace_back(nullptr);
 		cbuffer = &vs_cbuffers_.back();
+		break;
+	case ShaderType::DS:
+		ds_cbuffers_.emplace_back(nullptr);
+		cbuffer = &ds_cbuffers_.back();
 		break;
 	}
 
@@ -75,20 +81,40 @@ void Resource::AddTexture(ShaderType shader, const std::wstring &filename)
 	SafeRelease(texture);
 }
 
-void Resource::UpdateCBuffer(int slot, void *data, int bytes)
+void Resource::UpdateCBuffer(ShaderType shader, int slot, void *data, int bytes)
 {
 	D3D11_MAPPED_SUBRESOURCE cbuffer_map;
-	AssertSucceed(Engine::Instance().device_context()->Map(
-		vs_cbuffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0,
-		&cbuffer_map), L"Map cbuffer failed");
+	switch (shader)
+	{
+	case ShaderType::VS:
+		AssertSucceed(Engine::Instance().device_context()->Map(
+			vs_cbuffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0,
+			&cbuffer_map), L"Map cbuffer failed");
+		break;
+	case ShaderType::DS:
+		AssertSucceed(Engine::Instance().device_context()->Map(
+			ds_cbuffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0,
+			&cbuffer_map), L"Map cbuffer failed");
+		break;
+	}
 	memcpy(cbuffer_map.pData, data, bytes);
-	Engine::Instance().device_context()->Unmap(vs_cbuffers_[slot], 0);
+	switch (shader)
+	{
+	case ShaderType::VS:
+		Engine::Instance().device_context()->Unmap(vs_cbuffers_[slot], 0);
+		break;
+	case ShaderType::DS:
+		Engine::Instance().device_context()->Unmap(ds_cbuffers_[slot], 0);
+		break;
+	}
 }
 
 void Resource::Use()
 {
 	Engine::Instance().device_context()->VSSetConstantBuffers(
 		0, vs_cbuffers_.size(), vs_cbuffers_.data());
+	Engine::Instance().device_context()->DSSetConstantBuffers(
+		0, ds_cbuffers_.size(), ds_cbuffers_.data());
 	Engine::Instance().device_context()->PSSetShaderResources(
 		0, ps_texture_views_.size(), ps_texture_views_.data());
 	UINT stride = vertex_stride_;

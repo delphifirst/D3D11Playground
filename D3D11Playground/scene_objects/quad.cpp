@@ -9,11 +9,13 @@ Quad::Quad(const wstring& name, void *vertex_data, int bytes,
 	const wstring &texture_filename)
 	: SceneObject(name, vertex_data, sizeof(Vertex), bytes)
 {
-	resource_.AddCBuffer(ShaderType::VS, sizeof(MatrixBuffer));
+	resource_.AddCBuffer(ShaderType::DS, sizeof(MatrixBuffer));
 	resource_.AddTexture(ShaderType::PS, texture_filename);
 
-	shader_.AddShader(ShaderType::VS, L"resources/default_vs.cso");
-	shader_.AddShader(ShaderType::PS, L"resources/default_ps.cso");
+	shader_.AddShader(ShaderType::VS, L"resources/quad_vs.cso");
+	shader_.AddShader(ShaderType::HS, L"resources/quad_hs.cso");
+	shader_.AddShader(ShaderType::DS, L"resources/quad_ds.cso");
+	shader_.AddShader(ShaderType::PS, L"resources/quad_ps.cso");
 }
 
 void Quad::OnUpdate(double delta_time)
@@ -41,10 +43,10 @@ void Quad::OnDraw()
 	transposed_matrix = XMMatrixTranspose(transposed_matrix);
 	XMStoreFloat4x4(&matrix_buffer.proj_matrix, transposed_matrix);
 
-	resource_.UpdateCBuffer(0, &matrix_buffer, sizeof(matrix_buffer));
+	resource_.UpdateCBuffer(ShaderType::DS, 0, &matrix_buffer, sizeof(matrix_buffer));
 
 	Engine::Instance().device_context()->IASetPrimitiveTopology(
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+		D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 	Engine::Instance().device_context()->Draw(4, 0);
 }
 

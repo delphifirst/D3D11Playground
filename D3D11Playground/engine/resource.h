@@ -17,12 +17,13 @@ public:
 
 	void AddCBuffer(ShaderType shader, int bytes);
 	void AddTexture(ShaderType shader, const std::wstring &filename);
-	void UpdateCBuffer(int slot, void *data, int bytes);
+	void UpdateCBuffer(ShaderType shader, int slot, void *data, int bytes);
 	void Use();
 
 private:
 	ID3D11Buffer* vertex_buffer_;
 	int vertex_stride_;
 	std::vector<ID3D11Buffer*> vs_cbuffers_;
+	std::vector<ID3D11Buffer*> ds_cbuffers_;
 	std::vector<ID3D11ShaderResourceView*> ps_texture_views_;
 };

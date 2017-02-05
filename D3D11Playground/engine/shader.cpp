@@ -11,6 +11,8 @@ using namespace std;
 Shader::~Shader()
 {
 	SafeRelease(vertex_shader_);
+	SafeRelease(hull_shader_);
+	SafeRelease(domain_shader_);
 	SafeRelease(pixel_shader_);
 	SafeRelease(input_layout_);
 }
@@ -55,6 +57,20 @@ void Shader::AddShader(ShaderType shader_type, const wstring &filename)
 			L"Cannot create vertex shader: " + filename);
 		InitInputLayout(shader_code);
 		break;
+	case ShaderType::HS:
+		SafeRelease(hull_shader_);
+		AssertSucceed(Engine::Instance().device()->CreateHullShader(
+			shader_code.data(), shader_code.size(), nullptr, &hull_shader_),
+			L"Cannot create hull shader: " + filename);
+		InitInputLayout(shader_code);
+		break;
+	case ShaderType::DS:
+		SafeRelease(domain_shader_);
+		AssertSucceed(Engine::Instance().device()->CreateDomainShader(
+			shader_code.data(), shader_code.size(), nullptr, &domain_shader_),
+			L"Cannot create domain shader: " + filename);
+		InitInputLayout(shader_code);
+		break;
 	case ShaderType::PS:
 		SafeRelease(pixel_shader_);
 		AssertSucceed(Engine::Instance().device()->CreatePixelShader(
@@ -67,6 +83,8 @@ void Shader::AddShader(ShaderType shader_type, const wstring &filename)
 void Shader::Use() const
 {
 	Engine::Instance().device_context()->VSSetShader(vertex_shader_, nullptr, 0);
+	Engine::Instance().device_context()->HSSetShader(hull_shader_, nullptr, 0);
+	Engine::Instance().device_context()->DSSetShader(domain_shader_, nullptr, 0);
 	Engine::Instance().device_context()->PSSetShader(pixel_shader_, nullptr, 0);
 	Engine::Instance().device_context()->IASetInputLayout(input_layout_);
 }
