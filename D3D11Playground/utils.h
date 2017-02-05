@@ -4,6 +4,11 @@
 
 #include <Windows.h>
 
+enum class ShaderType
+{
+	VS, PS
+};
+
 class AppError
 {
 public:

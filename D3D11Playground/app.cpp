@@ -6,7 +6,10 @@
 #include "utils.h"
 #include "engine.h"
 
+#include "scene_objects/quad.h"
+
 using namespace std;
+using namespace DirectX;
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -42,6 +45,16 @@ void App::Init(const wstring& window_title, int width, int height)
 
 	InitWindow(width, height);
 	Engine::Instance().Init(main_hwnd_, width, height);
+	XMVECTORF32 quad_points[4] = {
+		{ -5, 0, 5, 1},
+		{ 5, 0, 5, 1 },
+		{ -5, 0, -5, 1 },
+		{ 5, 0, -5, 1 },
+	};
+	Engine::Instance().AddTopLevelObject(MakeQuad(
+		L"quad", 
+		quad_points[0], quad_points[1], quad_points[2], quad_points[3], 
+		L"madoka.dds"));
 }
 
 void App::EnterMainLoop()
@@ -78,8 +91,7 @@ void App::EnterMainLoop()
 			{
 				frame_timer = chrono::seconds(0);
 				SetWindowText(main_hwnd_, (window_title_
-					+ L" (FPS: " + to_wstring(frame_count)
-					+ L")").c_str());
+					+ L" (FPS: " + to_wstring(frame_count) + L")").c_str());
 				frame_count = 0;
 			}
 		}
