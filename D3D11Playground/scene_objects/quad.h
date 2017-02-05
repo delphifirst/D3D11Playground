@@ -5,7 +5,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#include "../scene_object.h"
+#include "../engine/scene_object.h"
 
 class Quad : public SceneObject
 {

@@ -150,29 +150,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="app.cpp" />
-    <ClCompile Include="camera_object.cpp" />
-    <ClCompile Include="engine.cpp" />
+    <ClCompile Include="engine\app.cpp" />
+    <ClCompile Include="engine\camera_object.cpp" />
+    <ClCompile Include="engine\engine.cpp" />
+    <ClCompile Include="engine\object.cpp" />
+    <ClCompile Include="engine\render_state.cpp" />
+    <ClCompile Include="engine\resource.cpp" />
+    <ClCompile Include="engine\scene_object.cpp" />
+    <ClCompile Include="engine\shader.cpp" />
+    <ClCompile Include="engine\utils.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="scene_object.cpp" />
-    <ClCompile Include="object.cpp" />
-    <ClCompile Include="render_state.cpp" />
-    <ClCompile Include="resource.cpp" />
     <ClCompile Include="scene_objects\quad.cpp" />
-    <ClCompile Include="shader.cpp" />
-    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="app.h" />
-    <ClInclude Include="camera_object.h" />
-    <ClInclude Include="engine.h" />
-    <ClInclude Include="scene_object.h" />
-    <ClInclude Include="object.h" />
-    <ClInclude Include="render_state.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="engine\app.h" />
+    <ClInclude Include="engine\camera_object.h" />
+    <ClInclude Include="engine\engine.h" />
+    <ClInclude Include="engine\object.h" />
+    <ClInclude Include="engine\render_state.h" />
+    <ClInclude Include="engine\resource.h" />
+    <ClInclude Include="engine\scene_object.h" />
+    <ClInclude Include="engine\shader.h" />
+    <ClInclude Include="engine\utils.h" />
     <ClInclude Include="scene_objects\quad.h" />
-    <ClInclude Include="shader.h" />
-    <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTK\DirectXTK_Desktop_2015.vcxproj">
@@ -185,17 +185,20 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)%(Filename).cso</ObjectFileOutput>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/resources/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)/resources/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="shaders\default_vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)%(Filename).cso</ObjectFileOutput>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/resources/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)/resources/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\madoka.DDS" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

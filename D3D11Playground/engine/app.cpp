@@ -6,8 +6,6 @@
 #include "utils.h"
 #include "engine.h"
 
-#include "scene_objects/quad.h"
-
 using namespace std;
 using namespace DirectX;
 
@@ -45,16 +43,6 @@ void App::Init(const wstring& window_title, int width, int height)
 
 	InitWindow(width, height);
 	Engine::Instance().Init(main_hwnd_, width, height);
-	XMVECTORF32 quad_points[4] = {
-		{ -5, 0, 5, 1},
-		{ 5, 0, 5, 1 },
-		{ -5, 0, -5, 1 },
-		{ 5, 0, -5, 1 },
-	};
-	Engine::Instance().AddTopLevelObject(MakeQuad(
-		L"quad", 
-		quad_points[0], quad_points[1], quad_points[2], quad_points[3], 
-		L"madoka.dds"));
 }
 
 void App::EnterMainLoop()

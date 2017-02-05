@@ -1,6 +1,6 @@
 #include "quad.h"
 
-#include "../engine.h"
+#include "../engine/engine.h"
 
 using namespace std;
 using namespace DirectX;
@@ -12,8 +12,8 @@ Quad::Quad(const wstring& name, void *vertex_data, int bytes,
 	resource_.AddCBuffer(ShaderType::VS, sizeof(MatrixBuffer));
 	resource_.AddTexture(ShaderType::PS, texture_filename);
 
-	shader_.AddShader(ShaderType::VS, L"default_vs.cso");
-	shader_.AddShader(ShaderType::PS, L"default_ps.cso");
+	shader_.AddShader(ShaderType::VS, L"resources/default_vs.cso");
+	shader_.AddShader(ShaderType::PS, L"resources/default_ps.cso");
 }
 
 void Quad::OnUpdate(double delta_time)

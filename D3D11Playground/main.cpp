@@ -1,17 +1,37 @@
 #include <iostream>
 
 #include <Windows.h>
+#include <DirectXMath.h>
 
-#include "app.h"
-#include "utils.h"
+#include "engine/app.h"
+#include "engine/engine.h"
+#include "engine/utils.h"
+
+#include "scene_objects/quad.h"
 
 using namespace std;
+using namespace DirectX;
+
+void InitSceneObjects()
+{
+	XMVECTORF32 quad_points[4] = {
+		{ -5, 0, 5, 1 },
+		{ 5, 0, 5, 1 },
+		{ -5, 0, -5, 1 },
+		{ 5, 0, -5, 1 },
+	};
+	Engine::Instance().AddTopLevelObject(MakeQuad(
+		L"quad",
+		quad_points[0], quad_points[1], quad_points[2], quad_points[3],
+		L"resources/madoka.dds"));
+}
 
 int wmain()
 {
 	try
 	{
 		App::Instance().Init(L"D3D11 Playground", 800, 600);
+		InitSceneObjects();
 		App::Instance().EnterMainLoop();
 	}
 	catch (const AppError& e)
