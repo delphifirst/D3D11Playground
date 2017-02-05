@@ -5,6 +5,7 @@
 
 #include "utils.h"
 #include "engine.h"
+#include "input.h"
 
 using namespace std;
 using namespace DirectX;
@@ -15,6 +16,21 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		break;
+	case WM_RBUTTONDOWN:
+		Input::Instance().StartMouseMove(LOWORD(lParam), HIWORD(lParam));
+		break;
+	case WM_MOUSEMOVE:
+		if (wParam & MK_RBUTTON)
+		{
+			Input::Instance().UpdateMousePos(LOWORD(lParam), HIWORD(lParam));
+		}
+		break;
+	case WM_KEYDOWN:
+		Input::Instance().UpdateKeyPressed(wParam, true);
+		break;
+	case WM_KEYUP:
+		Input::Instance().UpdateKeyPressed(wParam, false);
 		break;
 	case WM_SIZE:
 		App::Instance().OnResizeWindow(LOWORD(lParam), HIWORD(lParam));
@@ -71,6 +87,7 @@ void App::EnterMainLoop()
 			chrono::duration<double> delta_time = current_frame_time - last_frame_time;
 
 			Engine::Instance().OnTick(delta_time.count());
+			Input::Instance().OnTick();
 
 			last_frame_time = current_frame_time;
 			frame_timer += delta_time;

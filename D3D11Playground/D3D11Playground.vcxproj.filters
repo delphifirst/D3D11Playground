@@ -47,6 +47,9 @@
     <ClCompile Include="engine\utils.cpp">
       <Filter>engine</Filter>
     </ClCompile>
+    <ClCompile Include="engine\input.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scene_objects\quad.h">
@@ -77,6 +80,9 @@
       <Filter>engine</Filter>
     </ClInclude>
     <ClInclude Include="engine\utils.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\input.h">
       <Filter>engine</Filter>
     </ClInclude>
   </ItemGroup>

@@ -153,6 +153,7 @@
     <ClCompile Include="engine\app.cpp" />
     <ClCompile Include="engine\camera_object.cpp" />
     <ClCompile Include="engine\engine.cpp" />
+    <ClCompile Include="engine\input.cpp" />
     <ClCompile Include="engine\object.cpp" />
     <ClCompile Include="engine\render_state.cpp" />
     <ClCompile Include="engine\resource.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="engine\app.h" />
     <ClInclude Include="engine\camera_object.h" />
     <ClInclude Include="engine\engine.h" />
+    <ClInclude Include="engine\input.h" />
     <ClInclude Include="engine\object.h" />
     <ClInclude Include="engine\render_state.h" />
     <ClInclude Include="engine\resource.h" />
