@@ -31,8 +31,9 @@ RenderState::RenderState()
 	depth_stencil_desc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// Create the depth stencil state.
-	AssertSucceed(Engine::Instance().device()->CreateDepthStencilState(
-		&depth_stencil_desc, &depth_stencil_state_), L"Cannot create depth stencil state");
+	HRESULT hr = Engine::Instance().device()->CreateDepthStencilState(
+		&depth_stencil_desc, &depth_stencil_state_);
+	assert(SUCCEEDED(hr));
 
 	D3D11_RASTERIZER_DESC rasterizer_desc;
 
@@ -49,8 +50,9 @@ RenderState::RenderState()
 	rasterizer_desc.SlopeScaledDepthBias = 0.0f;
 
 	// Create the rasterizer state from the description we just filled out.
-	AssertSucceed(Engine::Instance().device()->CreateRasterizerState(
-		&rasterizer_desc, &rasterizer_state_), L"Cannot create depth stencil state");
+	hr = Engine::Instance().device()->CreateRasterizerState(
+		&rasterizer_desc, &rasterizer_state_);
+	assert(SUCCEEDED(hr));
 }
 
 void RenderState::Use()

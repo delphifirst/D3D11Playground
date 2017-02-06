@@ -1,5 +1,6 @@
 #include "shader.h"
 
+#include <cassert>
 #include <fstream>
 
 #include "utils.h"
@@ -14,6 +15,7 @@ Shader::~Shader()
 	SafeRelease(hull_shader_);
 	SafeRelease(domain_shader_);
 	SafeRelease(pixel_shader_);
+	SafeRelease(compute_shader_);
 	SafeRelease(input_layout_);
 }
 
@@ -37,45 +39,53 @@ void Shader::InitInputLayout(const vector<char> &vertex_shader_code)
 	input_layout_desc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	input_layout_desc[1].InstanceDataStepRate = 0;
 
-	AssertSucceed(Engine::Instance().device()->CreateInputLayout(
+	HRESULT hr = Engine::Instance().device()->CreateInputLayout(
 		input_layout_desc,
 		sizeof(input_layout_desc) / sizeof(input_layout_desc[0]),
 		vertex_shader_code.data(),
 		vertex_shader_code.size(),
-		&input_layout_), L"Cannot create input layout");
+		&input_layout_);
+	assert(SUCCEEDED(hr));
 }
 
 void Shader::AddShader(ShaderType shader_type, const wstring &filename)
 {
 	vector<char> shader_code = ReadFile(filename);
+	HRESULT hr;
 	switch (shader_type)
 	{
 	case ShaderType::VS:
 		SafeRelease(vertex_shader_);
-		AssertSucceed(Engine::Instance().device()->CreateVertexShader(
-			shader_code.data(), shader_code.size(), nullptr, &vertex_shader_), 
-			L"Cannot create vertex shader: " + filename);
+		hr = Engine::Instance().device()->CreateVertexShader(
+			shader_code.data(), shader_code.size(), nullptr, &vertex_shader_);
+		assert(SUCCEEDED(hr));
 		InitInputLayout(shader_code);
 		break;
 	case ShaderType::HS:
 		SafeRelease(hull_shader_);
-		AssertSucceed(Engine::Instance().device()->CreateHullShader(
-			shader_code.data(), shader_code.size(), nullptr, &hull_shader_),
-			L"Cannot create hull shader: " + filename);
+		hr = Engine::Instance().device()->CreateHullShader(
+			shader_code.data(), shader_code.size(), nullptr, &hull_shader_);
+		assert(SUCCEEDED(hr));
 		InitInputLayout(shader_code);
 		break;
 	case ShaderType::DS:
 		SafeRelease(domain_shader_);
-		AssertSucceed(Engine::Instance().device()->CreateDomainShader(
-			shader_code.data(), shader_code.size(), nullptr, &domain_shader_),
-			L"Cannot create domain shader: " + filename);
+		hr = Engine::Instance().device()->CreateDomainShader(
+			shader_code.data(), shader_code.size(), nullptr, &domain_shader_);
+		assert(SUCCEEDED(hr));
 		InitInputLayout(shader_code);
 		break;
 	case ShaderType::PS:
 		SafeRelease(pixel_shader_);
-		AssertSucceed(Engine::Instance().device()->CreatePixelShader(
-			shader_code.data(), shader_code.size(), nullptr, &pixel_shader_),
-			L"Cannot create pixel shader: " + filename);
+		hr = Engine::Instance().device()->CreatePixelShader(
+			shader_code.data(), shader_code.size(), nullptr, &pixel_shader_);
+		assert(SUCCEEDED(hr));
+		break;
+	case ShaderType::CS:
+		SafeRelease(compute_shader_);
+		hr = Engine::Instance().device()->CreateComputeShader(
+			shader_code.data(), shader_code.size(), nullptr, &compute_shader_);
+		assert(SUCCEEDED(hr));
 		break;
 	}
 }
@@ -86,6 +96,7 @@ void Shader::Use() const
 	Engine::Instance().device_context()->HSSetShader(hull_shader_, nullptr, 0);
 	Engine::Instance().device_context()->DSSetShader(domain_shader_, nullptr, 0);
 	Engine::Instance().device_context()->PSSetShader(pixel_shader_, nullptr, 0);
+	Engine::Instance().device_context()->CSSetShader(compute_shader_, nullptr, 0);
 	Engine::Instance().device_context()->IASetInputLayout(input_layout_);
 }
 

@@ -27,5 +27,6 @@ private:
 	ID3D11HullShader* hull_shader_ = nullptr;
 	ID3D11DomainShader* domain_shader_ = nullptr;
 	ID3D11PixelShader* pixel_shader_ = nullptr;
+	ID3D11ComputeShader* compute_shader_ = nullptr;
 	ID3D11InputLayout* input_layout_ = nullptr;
 };

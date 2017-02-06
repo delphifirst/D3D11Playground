@@ -1,9 +1,17 @@
 #include "quad.h"
 
+#include <cassert>
+#include <random>
+#include <chrono>
+#include <iostream>
+#include <cmath>
+
 #include "../engine/engine.h"
 
 using namespace std;
 using namespace DirectX;
+
+constexpr int Quad::kMatrixSize;
 
 Quad::Quad(const wstring& name, void *vertex_data, int bytes,
 	const wstring &texture_filename)
@@ -16,6 +24,72 @@ Quad::Quad(const wstring& name, void *vertex_data, int bytes,
 	shader_.AddShader(ShaderType::HS, L"resources/quad_hs.cso");
 	shader_.AddShader(ShaderType::DS, L"resources/quad_ds.cso");
 	shader_.AddShader(ShaderType::PS, L"resources/quad_ps.cso");
+
+	InitComputeShaderTest();
+}
+
+void Quad::InitComputeShaderTest()
+{
+	shader_.AddShader(ShaderType::CS, L"resources/quad_cs.cso");
+	default_random_engine random_engine;
+	uniform_real_distribution<> dist;
+	for (int i = 0; i < kMatrixSize * kMatrixSize; ++i)
+		input_data[i] = dist(random_engine);
+	resource_.AddCBuffer(ShaderType::CS, sizeof(CSBuffer));
+	CSBuffer buffer = { kMatrixSize, 0, 0, 0 };
+	resource_.UpdateCBuffer(ShaderType::CS, 0, &buffer, sizeof(buffer));
+	resource_.AddStructuredBuffer(ShaderType::CS, input_data, 4, kMatrixSize * kMatrixSize);
+	resource_.AddRWStructuredBuffer(ShaderType::CS, nullptr, 4, kMatrixSize * kMatrixSize);
+}
+
+void Quad::ComputeShaderTest()
+{
+	ZeroMemory(cpu_result, sizeof(cpu_result));
+	chrono::time_point<chrono::steady_clock> start = chrono::steady_clock::now();
+	for (int k = 0; k < kMatrixSize; ++k)
+	{
+		for (int i = 0; i < kMatrixSize; ++i)
+		{
+			float r = input_data[i * kMatrixSize + k];
+			for (int j = 0; j < kMatrixSize; ++j)
+				cpu_result[i * kMatrixSize + j] += r * input_data[k * kMatrixSize + j];
+		}
+	}
+	cout << "CPU time: " << static_cast<chrono::duration<double>>(
+		chrono::steady_clock::now() - start).count() << endl;
+
+	start = chrono::steady_clock::now();
+	Engine::Instance().device_context()->Dispatch(kMatrixSize * kMatrixSize / 256, 1, 1);
+
+	ID3D11Buffer* gpu_result_buffer = nullptr;
+	D3D11_BUFFER_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	desc.ByteWidth = 4 * kMatrixSize * kMatrixSize;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	desc.Usage = D3D11_USAGE_STAGING;
+	desc.BindFlags = 0;
+	desc.MiscFlags = 0;
+	HRESULT hr = Engine::Instance().device()->CreateBuffer(&desc, nullptr, &gpu_result_buffer);
+	assert(SUCCEEDED(hr));
+	ID3D11Resource* gpu_result_buffer_on_gpu = nullptr;
+	resource_.GetRWStructuredBuffer(ShaderType::CS, 0)->GetResource(&gpu_result_buffer_on_gpu);
+	Engine::Instance().device_context()->CopyResource(gpu_result_buffer, gpu_result_buffer_on_gpu);
+	SafeRelease(gpu_result_buffer_on_gpu);
+	D3D11_MAPPED_SUBRESOURCE mapped_resource;
+	hr = Engine::Instance().device_context()->Map(gpu_result_buffer, 0, D3D11_MAP_READ, 0, &mapped_resource);
+	assert(SUCCEEDED(hr));
+	memcpy(gpu_result, mapped_resource.pData, sizeof(gpu_result));
+	Engine::Instance().device_context()->Unmap(gpu_result_buffer, 0);
+	SafeRelease(gpu_result_buffer);
+
+	cout << "GPU time: " << static_cast<chrono::duration<double>>(
+		chrono::steady_clock::now() - start).count() << endl;
+
+	for (int i = 0; i < kMatrixSize * kMatrixSize; ++i)
+		if (abs(cpu_result[i] - gpu_result[i]) > 0.001)
+		{
+			cout << "ERROR: " << cpu_result[i] << ", " << gpu_result[i] << endl;
+		}
 }
 
 void Quad::OnUpdate(double delta_time)
@@ -26,6 +100,8 @@ void Quad::OnUpdate(double delta_time)
 void Quad::OnDraw()
 {
 	SceneObject::OnDraw();
+
+	ComputeShaderTest();
 
 	MatrixBuffer matrix_buffer;
 	XMMATRIX transposed_matrix;

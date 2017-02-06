@@ -99,6 +99,9 @@
     <FxCompile Include="shaders\quad_hs.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
+    <FxCompile Include="shaders\quad_cs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\madoka.DDS">

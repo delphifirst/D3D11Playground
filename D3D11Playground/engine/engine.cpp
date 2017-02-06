@@ -1,5 +1,6 @@
 #include "engine.h"
 
+#include <cassert>
 #include <DirectXMath.h>
 
 #include "object.h"
@@ -28,10 +29,10 @@ void Engine::Init(HWND main_hwnd, int width, int height)
 	swap_chain_desc.Flags = 0;
 
 	D3D_FEATURE_LEVEL feature_level = D3D_FEATURE_LEVEL_11_0;
-	AssertSucceed(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, 0, 0,
+	HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, 0, 0,
 		&feature_level, 1, D3D11_SDK_VERSION, &swap_chain_desc, &swap_chain_,
-		&d3d_device_, nullptr, &d3d_device_context_),
-		L"Cannot create device and swap chain");
+		&d3d_device_, nullptr, &d3d_device_context_);
+	assert(SUCCEEDED(hr));
 
 	InitRenderTarget(width, height);
 	InitEngine();
@@ -47,8 +48,8 @@ void Engine::InitRenderTarget(int width, int height)
 	SafeRelease(depth_stencil_view_);
 
 	// Resize the swap chain and recreate the render target view.
-	AssertSucceed(swap_chain_->ResizeBuffers(1, width, height,
-		kBackBufferFormat, 0), L"Resize swap chain error");
+	HRESULT hr = swap_chain_->ResizeBuffers(1, width, height, kBackBufferFormat, 0);
+	assert(SUCCEEDED(hr));
 
 	// Create render target view
 	ID3D11Texture2D* back_buffer;

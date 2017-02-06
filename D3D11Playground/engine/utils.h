@@ -3,10 +3,11 @@
 #include <string>
 
 #include <Windows.h>
+#include <d3d11.h>
 
 enum class ShaderType
 {
-	VS, PS, DS, HS
+	VS, PS, DS, HS, CS
 };
 
 class AppError
@@ -34,4 +35,4 @@ void SafeRelease(T* &obj)
 	}
 }
 
-void AssertSucceed(HRESULT hr, const std::wstring& message);
+int GetPixelSize(DXGI_FORMAT format);
