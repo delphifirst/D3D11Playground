@@ -20,10 +20,10 @@ Resource::Resource(void *vertex_data, int vertex_stride, int total_bytes)
 	buffer_desc.MiscFlags = 0;
 	buffer_desc.StructureByteStride = 0;
 
-	HRESULT hr = Engine::Instance().device()->CreateBuffer(&buffer_desc, nullptr, &vertex_buffer_);
+	D3D11_SUBRESOURCE_DATA init_data;
+	init_data.pSysMem = vertex_data;
+	HRESULT hr = Engine::Instance().device()->CreateBuffer(&buffer_desc, &init_data, &vertex_buffer_);
 	assert(SUCCEEDED(hr));
-	Engine::Instance().device_context()->UpdateSubresource(
-		vertex_buffer_, 0, nullptr, vertex_data, 0, 0);
 }
 
 Resource::~Resource()
