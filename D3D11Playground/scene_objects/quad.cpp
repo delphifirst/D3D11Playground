@@ -68,7 +68,8 @@ void Quad::ComputeShaderTest()
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 	desc.Usage = D3D11_USAGE_STAGING;
 	desc.BindFlags = 0;
-	desc.MiscFlags = 0;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+	desc.StructureByteStride = 4;
 	HRESULT hr = Engine::Instance().device()->CreateBuffer(&desc, nullptr, &gpu_result_buffer);
 	assert(SUCCEEDED(hr));
 	ID3D11Resource* gpu_result_buffer_on_gpu = nullptr;
