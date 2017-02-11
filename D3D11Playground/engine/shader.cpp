@@ -66,14 +66,12 @@ void Shader::AddShader(ShaderType shader_type, const wstring &filename)
 		hr = Engine::Instance().device()->CreateHullShader(
 			shader_code.data(), shader_code.size(), nullptr, &hull_shader_);
 		assert(SUCCEEDED(hr));
-		InitInputLayout(shader_code);
 		break;
 	case ShaderType::DS:
 		SafeRelease(domain_shader_);
 		hr = Engine::Instance().device()->CreateDomainShader(
 			shader_code.data(), shader_code.size(), nullptr, &domain_shader_);
 		assert(SUCCEEDED(hr));
-		InitInputLayout(shader_code);
 		break;
 	case ShaderType::PS:
 		SafeRelease(pixel_shader_);
