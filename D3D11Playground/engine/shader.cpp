@@ -19,48 +19,12 @@ Shader::~Shader()
 	SafeRelease(input_layout_);
 }
 
-void Shader::InitInputLayout(const vector<char> &vertex_shader_code)
-{
-	D3D11_INPUT_ELEMENT_DESC input_layout_desc[2];
-
-	input_layout_desc[0].SemanticName = "POSITION";
-	input_layout_desc[0].SemanticIndex = 0;
-	input_layout_desc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	input_layout_desc[0].InputSlot = 0;
-	input_layout_desc[0].AlignedByteOffset = 0;
-	input_layout_desc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	input_layout_desc[0].InstanceDataStepRate = 0;
-
-	input_layout_desc[1].SemanticName = "TEXCOORD";
-	input_layout_desc[1].SemanticIndex = 0;
-	input_layout_desc[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	input_layout_desc[1].InputSlot = 0;
-	input_layout_desc[1].AlignedByteOffset = 12;
-	input_layout_desc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	input_layout_desc[1].InstanceDataStepRate = 0;
-
-	HRESULT hr = Engine::Instance().device()->CreateInputLayout(
-		input_layout_desc,
-		sizeof(input_layout_desc) / sizeof(input_layout_desc[0]),
-		vertex_shader_code.data(),
-		vertex_shader_code.size(),
-		&input_layout_);
-	assert(SUCCEEDED(hr));
-}
-
 void Shader::AddShader(ShaderType shader_type, const wstring &filename)
 {
 	vector<char> shader_code = ReadFile(filename);
 	HRESULT hr;
 	switch (shader_type)
 	{
-	case ShaderType::VS:
-		SafeRelease(vertex_shader_);
-		hr = Engine::Instance().device()->CreateVertexShader(
-			shader_code.data(), shader_code.size(), nullptr, &vertex_shader_);
-		assert(SUCCEEDED(hr));
-		InitInputLayout(shader_code);
-		break;
 	case ShaderType::HS:
 		SafeRelease(hull_shader_);
 		hr = Engine::Instance().device()->CreateHullShader(
@@ -86,6 +50,21 @@ void Shader::AddShader(ShaderType shader_type, const wstring &filename)
 		assert(SUCCEEDED(hr));
 		break;
 	}
+}
+
+void Shader::AddVertexShader(const wstring &filename, D3D11_INPUT_ELEMENT_DESC input_elem_desc[], int input_elem_count)
+{
+	vector<char> shader_code = ReadFile(filename);
+	HRESULT hr;
+
+	SafeRelease(vertex_shader_);
+	hr = Engine::Instance().device()->CreateVertexShader(
+		shader_code.data(), shader_code.size(), nullptr, &vertex_shader_);
+	assert(SUCCEEDED(hr));
+
+	hr = Engine::Instance().device()->CreateInputLayout(
+		input_elem_desc, input_elem_count, shader_code.data(), shader_code.size(), &input_layout_);
+	assert(SUCCEEDED(hr));
 }
 
 void Shader::Use() const

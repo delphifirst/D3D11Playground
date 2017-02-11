@@ -17,7 +17,7 @@ public:
 	Shader& operator=(const Shader& other) = delete;
 
 	void AddShader(ShaderType shader_type, const std::wstring &filename);
-	void InitInputLayout(const std::vector<char> &vertex_shader_code);
+	void AddVertexShader(const std::wstring &filename, D3D11_INPUT_ELEMENT_DESC input_elem_desc[], int input_elem_count);
 	void Use() const;
 
 private:

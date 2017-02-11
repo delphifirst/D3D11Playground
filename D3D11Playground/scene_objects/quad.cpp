@@ -20,7 +20,26 @@ Quad::Quad(const wstring& name, void *vertex_data, int bytes,
 	resource_.AddCBuffer(ShaderType::DS, sizeof(MatrixBuffer));
 	resource_.AddTexture(ShaderType::PS, texture_filename);
 
-	shader_.AddShader(ShaderType::VS, L"resources/quad_vs.cso");
+	D3D11_INPUT_ELEMENT_DESC input_layout_desc[2];
+
+	input_layout_desc[0].SemanticName = "POSITION";
+	input_layout_desc[0].SemanticIndex = 0;
+	input_layout_desc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	input_layout_desc[0].InputSlot = 0;
+	input_layout_desc[0].AlignedByteOffset = 0;
+	input_layout_desc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	input_layout_desc[0].InstanceDataStepRate = 0;
+
+	input_layout_desc[1].SemanticName = "TEXCOORD";
+	input_layout_desc[1].SemanticIndex = 0;
+	input_layout_desc[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	input_layout_desc[1].InputSlot = 0;
+	input_layout_desc[1].AlignedByteOffset = 12;
+	input_layout_desc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	input_layout_desc[1].InstanceDataStepRate = 0;
+
+	shader_.AddVertexShader(L"resources/quad_vs.cso", input_layout_desc, 
+		sizeof(input_layout_desc) / sizeof(input_layout_desc[0]));
 	shader_.AddShader(ShaderType::HS, L"resources/quad_hs.cso");
 	shader_.AddShader(ShaderType::DS, L"resources/quad_ds.cso");
 	shader_.AddShader(ShaderType::PS, L"resources/quad_ps.cso");
