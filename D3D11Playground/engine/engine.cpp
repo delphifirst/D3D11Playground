@@ -126,7 +126,7 @@ void Engine::OnResizeWindow(int width, int height)
 
 void Engine::OnTick(double delta_time)
 {
-	float clear_color[] = { 0, 0, 0, 1 };
+	float clear_color[] = { 0, 0.1, 0.2, 1 };
 	d3d_device_context_->ClearRenderTargetView(render_target_view_, clear_color);
 	d3d_device_context_->ClearDepthStencilView(depth_stencil_view_,
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
