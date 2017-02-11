@@ -9,10 +9,6 @@
 
 class Quad : public SceneObject
 {
-	friend Quad* XM_CALLCONV MakeQuad(const std::wstring& name, DirectX::FXMVECTOR a, 
-		DirectX::FXMVECTOR b, DirectX::FXMVECTOR c, DirectX::GXMVECTOR, 
-		const std::wstring& texture_filename);
-
 public:
 	struct MatrixBuffer
 	{
@@ -33,12 +29,13 @@ public:
 		int unused[3];
 	};
 
+	Quad(const std::wstring& name, DirectX::FXMVECTOR a, DirectX::FXMVECTOR b,
+		DirectX::FXMVECTOR c, DirectX::CXMVECTOR d, const std::wstring &texture_filename);
+
 	virtual void OnUpdate(double delta_time) override;
 	virtual void OnDraw() override;
 
 private:
-	Quad(const std::wstring& name, void *vertex_data, int bytes, 
-		const std::wstring &texture_filename);
 
 	// Stuff for testing compute shader
 	void InitComputeShaderTest();
@@ -48,6 +45,3 @@ private:
 	float cpu_result[kMatrixSize * kMatrixSize];
 	float gpu_result[kMatrixSize * kMatrixSize];
 };
-
-Quad* XM_CALLCONV MakeQuad(const std::wstring& name, DirectX::FXMVECTOR a, DirectX::FXMVECTOR b,
-	DirectX::FXMVECTOR c, DirectX::GXMVECTOR d, const std::wstring& texture_filename);
