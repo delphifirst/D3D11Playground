@@ -15,8 +15,10 @@ constexpr int Quad::kMatrixSize;
 
 Quad::Quad(const wstring& name, void *vertex_data, int bytes,
 	const wstring &texture_filename)
-	: SceneObject(name, vertex_data, sizeof(Vertex), bytes)
+	: SceneObject(name)
 {
+	resource_.AddVertexBuffer(vertex_data, sizeof(Vertex), bytes, false);
+
 	resource_.AddCBuffer(ShaderType::DS, sizeof(MatrixBuffer));
 	resource_.AddTexture(ShaderType::PS, texture_filename);
 

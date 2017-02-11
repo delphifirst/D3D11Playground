@@ -161,6 +161,7 @@
     <ClCompile Include="engine\shader.cpp" />
     <ClCompile Include="engine\utils.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="scene_objects\particle_system.cpp" />
     <ClCompile Include="scene_objects\quad.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="engine\scene_object.h" />
     <ClInclude Include="engine\shader.h" />
     <ClInclude Include="engine\utils.h" />
+    <ClInclude Include="scene_objects\particle_system.h" />
     <ClInclude Include="scene_objects\quad.h" />
   </ItemGroup>
   <ItemGroup>

@@ -50,6 +50,9 @@
     <ClCompile Include="engine\input.cpp">
       <Filter>engine</Filter>
     </ClCompile>
+    <ClCompile Include="scene_objects\particle_system.cpp">
+      <Filter>scene_objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scene_objects\quad.h">
@@ -84,6 +87,9 @@
     </ClInclude>
     <ClInclude Include="engine\input.h">
       <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="scene_objects\particle_system.h">
+      <Filter>scene_objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

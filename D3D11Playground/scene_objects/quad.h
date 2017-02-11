@@ -43,7 +43,7 @@ private:
 	// Stuff for testing compute shader
 	void InitComputeShaderTest();
 	void ComputeShaderTest();
-	static constexpr int kMatrixSize = 512;
+	static constexpr int kMatrixSize = 32;
 	float input_data[kMatrixSize * kMatrixSize];
 	float cpu_result[kMatrixSize * kMatrixSize];
 	float gpu_result[kMatrixSize * kMatrixSize];

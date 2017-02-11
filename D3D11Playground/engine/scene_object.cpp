@@ -4,8 +4,8 @@
 
 using namespace std;
 
-SceneObject::SceneObject(const wstring& name, void *vertex_data, int vertex_stride, int total_bytes)
-	: Object(name), resource_(vertex_data, vertex_stride, total_bytes)
+SceneObject::SceneObject(const wstring& name)
+	: Object(name)
 {
 
 }

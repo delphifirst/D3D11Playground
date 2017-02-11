@@ -10,13 +10,16 @@
 class Resource
 {
 public:
-	Resource(void *vertex_data, int vertex_stride, int total_bytes);
+	Resource() = default;
 	~Resource();
 	Resource(const Resource& other) = delete;
 	Resource& operator=(const Resource& other) = delete;
 
 	void AddCBuffer(ShaderType shader, int bytes);
 	void UpdateCBuffer(ShaderType shader, int slot, void *data, int bytes);
+
+	void AddVertexBuffer(void* vertex_data, UINT stride, int bytes, bool is_dynamic);
+	void UpdateVertexBuffer(int slot, void* vertex_data, int bytes);
 
 	void AddTexture(ShaderType shader, const std::wstring &filename);
 	void AddTexture(ShaderType shader, int width, int height, DXGI_FORMAT format, void* data);
@@ -29,8 +32,10 @@ public:
 private:
 	ID3D11Buffer* CreateStructuredBuffer(void* data, int elem_bytes, int elem_count);
 
-	ID3D11Buffer* vertex_buffer_;
-	int vertex_stride_;
+	std::vector<ID3D11Buffer*> vertex_buffers_;
+	std::vector<UINT> vertex_buffer_strides_;
+	std::vector<UINT> vertex_buffer_offsets_;
+
 	std::vector<ID3D11Buffer*> vs_cbuffers_;
 	std::vector<ID3D11Buffer*> ds_cbuffers_;
 	std::vector<ID3D11Buffer*> cs_cbuffers_;

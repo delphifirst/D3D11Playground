@@ -10,7 +10,7 @@
 class SceneObject : public Object
 {
 public:
-	SceneObject(const std::wstring& name, void *vertex_data, int vertex_stride, int total_bytes);
+	SceneObject(const std::wstring& name);
 
 	virtual void OnDraw() override;
 

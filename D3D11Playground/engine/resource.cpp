@@ -9,26 +9,10 @@
 
 using namespace DirectX;
 
-Resource::Resource(void *vertex_data, int vertex_stride, int total_bytes)
-	:vertex_stride_(vertex_stride)
-{
-	D3D11_BUFFER_DESC buffer_desc;
-	buffer_desc.Usage = D3D11_USAGE_DEFAULT;
-	buffer_desc.ByteWidth = total_bytes;
-	buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	buffer_desc.CPUAccessFlags = 0;
-	buffer_desc.MiscFlags = 0;
-	buffer_desc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA init_data;
-	init_data.pSysMem = vertex_data;
-	HRESULT hr = Engine::Instance().device()->CreateBuffer(&buffer_desc, &init_data, &vertex_buffer_);
-	assert(SUCCEEDED(hr));
-}
-
 Resource::~Resource()
 {
-	SafeRelease(vertex_buffer_);
+	for (ID3D11Buffer* vertex_buffer: vertex_buffers_)
+		SafeRelease(vertex_buffer);
 	for (ID3D11Buffer* buffer : vs_cbuffers_)
 		SafeRelease(buffer);
 	for (ID3D11Buffer* buffer : ds_cbuffers_)
@@ -77,30 +61,30 @@ void Resource::AddCBuffer(ShaderType shader, int bytes)
 
 void Resource::UpdateCBuffer(ShaderType shader, int slot, void *data, int bytes)
 {
-	D3D11_MAPPED_SUBRESOURCE cbuffer_map = {};
+	D3D11_MAPPED_SUBRESOURCE buffer_map = {};
 	HRESULT hr;
 	switch (shader)
 	{
 	case ShaderType::VS:
 		hr = Engine::Instance().device_context()->Map(
-			vs_cbuffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0, &cbuffer_map);
+			vs_cbuffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0, &buffer_map);
 		assert(SUCCEEDED(hr));
 		break;
 	case ShaderType::DS:
 		hr = Engine::Instance().device_context()->Map(
-			ds_cbuffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0, &cbuffer_map);
+			ds_cbuffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0, &buffer_map);
 		assert(SUCCEEDED(hr));
 		break;
 	case ShaderType::CS:
 		hr = Engine::Instance().device_context()->Map(
-			cs_cbuffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0, &cbuffer_map);
+			cs_cbuffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0, &buffer_map);
 		assert(SUCCEEDED(hr));
 		break;
 	default:
 		assert(false);
 		break;
 	}
-	memcpy(cbuffer_map.pData, data, bytes);
+	memcpy(buffer_map.pData, data, bytes);
 	switch (shader)
 	{
 	case ShaderType::VS:
@@ -118,6 +102,36 @@ void Resource::UpdateCBuffer(ShaderType shader, int slot, void *data, int bytes)
 	}
 }
 
+void Resource::AddVertexBuffer(void* vertex_data, UINT stride, int bytes, bool is_dynamic)
+{
+	D3D11_BUFFER_DESC buffer_desc;
+	buffer_desc.Usage = is_dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
+	buffer_desc.ByteWidth = bytes;
+	buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	buffer_desc.CPUAccessFlags = 0;
+	buffer_desc.MiscFlags = 0;
+	buffer_desc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA init_data;
+	init_data.pSysMem = vertex_data;
+	vertex_buffers_.emplace_back(nullptr);
+	vertex_buffer_strides_.push_back(stride);
+	vertex_buffer_offsets_.push_back(0);
+	HRESULT hr = Engine::Instance().device()->CreateBuffer(&buffer_desc, &init_data, &vertex_buffers_.back());
+	assert(SUCCEEDED(hr));
+}
+
+void Resource::UpdateVertexBuffer(int slot, void* vertex_data, int bytes)
+{
+	D3D11_MAPPED_SUBRESOURCE buffer_map = {};
+	HRESULT hr = Engine::Instance().device_context()->Map(
+		vertex_buffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0, &buffer_map);
+	assert(SUCCEEDED(hr));
+
+	memcpy(buffer_map.pData, vertex_data, bytes);
+	
+	Engine::Instance().device_context()->Unmap(vertex_buffers_[slot], 0);
+}
 
 void Resource::AddTexture(ShaderType shader, const std::wstring &filename)
 {
@@ -275,9 +289,9 @@ void Resource::Use()
 	Engine::Instance().device_context()->CSSetUnorderedAccessViews(
 		0, cs_unordered_access_views_.size(), cs_unordered_access_views_.data(), nullptr);
 
-	UINT stride = vertex_stride_;
-	UINT offset = 0;
-	Engine::Instance().device_context()->IASetVertexBuffers(0, 1, &vertex_buffer_, &stride, &offset);
+	Engine::Instance().device_context()->IASetVertexBuffers(
+		0, vertex_buffers_.size(), vertex_buffers_.data(), vertex_buffer_strides_.data(), 
+		vertex_buffer_offsets_.data());
 }
 
 ID3D11Buffer* Resource::CreateStructuredBuffer(void* data, int elem_bytes, int elem_count)
