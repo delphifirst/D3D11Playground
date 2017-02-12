@@ -3,6 +3,8 @@ Texture2D shader_texture : register(t0);
 SamplerState linear_sampler
 {
 	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = WRAP;
+	AddressV = WRAP;
 };
 
 struct PSInput

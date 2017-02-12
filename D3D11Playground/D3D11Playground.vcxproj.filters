@@ -10,10 +10,6 @@
     <Filter Include="engine">
       <UniqueIdentifier>{2e9f6518-e91f-4d01-8c1e-e0a08ad01eb6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resources">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="scene_objects\quad.cpp">
@@ -114,10 +110,5 @@
     <FxCompile Include="shaders\particle_system_vs.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="resources\madoka.DDS">
-      <Filter>resources</Filter>
-    </Image>
   </ItemGroup>
 </Project>

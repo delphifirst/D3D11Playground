@@ -108,7 +108,7 @@ void Resource::AddVertexBuffer(void* vertex_data, UINT stride, int bytes, bool i
 	buffer_desc.Usage = is_dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
 	buffer_desc.ByteWidth = bytes;
 	buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	buffer_desc.CPUAccessFlags = 0;
+	buffer_desc.CPUAccessFlags = is_dynamic ? D3D11_CPU_ACCESS_WRITE : 0;
 	buffer_desc.MiscFlags = 0;
 	buffer_desc.StructureByteStride = 0;
 
@@ -117,20 +117,21 @@ void Resource::AddVertexBuffer(void* vertex_data, UINT stride, int bytes, bool i
 	vertex_buffers_.emplace_back(nullptr);
 	vertex_buffer_strides_.push_back(stride);
 	vertex_buffer_offsets_.push_back(0);
-	HRESULT hr = Engine::Instance().device()->CreateBuffer(&buffer_desc, &init_data, &vertex_buffers_.back());
+	HRESULT hr = Engine::Instance().device()->CreateBuffer(&buffer_desc, 
+		vertex_data ? &init_data : nullptr, &vertex_buffers_.back());
 	assert(SUCCEEDED(hr));
+}
+
+void Resource::UnmapVertexBuffer(int slot)
+{
+	Engine::Instance().device_context()->Unmap(vertex_buffers_[slot], 0);
 }
 
 void Resource::UpdateVertexBuffer(int slot, void* vertex_data, int bytes)
 {
-	D3D11_MAPPED_SUBRESOURCE buffer_map = {};
-	HRESULT hr = Engine::Instance().device_context()->Map(
-		vertex_buffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0, &buffer_map);
-	assert(SUCCEEDED(hr));
-
-	memcpy(buffer_map.pData, vertex_data, bytes);
-	
-	Engine::Instance().device_context()->Unmap(vertex_buffers_[slot], 0);
+	void *vertex_buffer = MapVertexBuffer<void>(slot);
+	memcpy(vertex_buffer, vertex_data, bytes);
+	UnmapVertexBuffer(slot);
 }
 
 void Resource::AddTexture(ShaderType shader, const std::wstring &filename)

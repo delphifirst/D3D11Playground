@@ -4,7 +4,7 @@ using namespace std;
 using namespace DirectX;
 
 Object::Object(const wstring& name) 
-	: name_(name), scale(1, 1, 1)
+	: name_(name), position(0, 0, 0), rotation(0, 0, 0), scale(1, 1, 1)
 {
 
 }

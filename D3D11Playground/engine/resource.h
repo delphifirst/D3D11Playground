@@ -5,6 +5,7 @@
 
 #include <d3d11.h>
 
+#include "engine.h"
 #include "utils.h"
 
 class Resource
@@ -19,6 +20,16 @@ public:
 	void UpdateCBuffer(ShaderType shader, int slot, void *data, int bytes);
 
 	void AddVertexBuffer(void* vertex_data, UINT stride, int bytes, bool is_dynamic);
+	template<typename T>
+	T* MapVertexBuffer(int slot)
+	{
+		D3D11_MAPPED_SUBRESOURCE buffer_map = {};
+		HRESULT hr = Engine::Instance().device_context()->Map(
+			vertex_buffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0, &buffer_map);
+		assert(SUCCEEDED(hr));
+		return static_cast<T*>(buffer_map.pData);
+	}
+	void UnmapVertexBuffer(int slot);
 	void UpdateVertexBuffer(int slot, void* vertex_data, int bytes);
 
 	void AddTexture(ShaderType shader, const std::wstring &filename);

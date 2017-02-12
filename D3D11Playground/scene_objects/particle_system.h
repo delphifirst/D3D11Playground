@@ -13,7 +13,6 @@ class ParticleSystem : public SceneObject
 public:
 	struct MatrixBuffer
 	{
-		DirectX::XMFLOAT4X4 world_matrix;
 		DirectX::XMFLOAT4X4 view_matrix;
 		DirectX::XMFLOAT4X4 proj_matrix;
 	};
@@ -27,15 +26,17 @@ public:
 	struct Particle
 	{
 		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT3 speed_direction;
-		float speed;
+		DirectX::XMFLOAT3 speed;
 		float life_time;
 		float current_life_time;
 	};
 
 	ParticleSystem(const std::wstring& name, const std::wstring& texture_filename,
-		DirectX::FXMVECTOR spawn_pos, float min_speed, float max_speed,
-		float min_life_time, float max_life_time, int particle_num);
+		float min_speed, float max_speed, float min_life_time, float max_life_time, 
+		int particle_num);
+
+	virtual void OnUpdate(double delta_time) override;
+	virtual void OnDraw() override;
 
 private:
 	float RandomInRange(float min_val, float max_val);
@@ -44,4 +45,7 @@ private:
 	std::uniform_real_distribution<float> random;
 
 	std::vector<Particle> particles_;
+
+	float min_speed_, max_speed_;
+	float min_life_time_, max_life_time_;
 };
