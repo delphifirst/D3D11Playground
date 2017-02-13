@@ -47,6 +47,13 @@ ParticleSystem::ParticleSystem(const wstring& name, const wstring& texture_filen
 	shader_.AddVertexShader(L"resources/particle_system_vs.cso", input_layout_desc,
 		sizeof(input_layout_desc) / sizeof(input_layout_desc[0]));
 	shader_.AddShader(ShaderType::PS, L"resources/particle_system_ps.cso");
+
+	render_state_.ChangeBlendState().RenderTarget[0].BlendEnable = true;
+	render_state_.ChangeBlendState().RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	render_state_.ChangeBlendState().RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	render_state_.ChangeBlendState().RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+
+	render_state_.ChangeDepthStencilState().DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 }
 
 void ParticleSystem::OnUpdate(double delta_time)
