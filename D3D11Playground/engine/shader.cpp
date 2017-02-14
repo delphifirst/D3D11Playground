@@ -14,6 +14,7 @@ Shader::~Shader()
 	SafeRelease(vertex_shader_);
 	SafeRelease(hull_shader_);
 	SafeRelease(domain_shader_);
+	SafeRelease(geometry_shader_);
 	SafeRelease(pixel_shader_);
 	SafeRelease(compute_shader_);
 	SafeRelease(input_layout_);
@@ -35,6 +36,12 @@ void Shader::AddShader(ShaderType shader_type, const wstring &filename)
 		SafeRelease(domain_shader_);
 		hr = Engine::Instance().device()->CreateDomainShader(
 			shader_code.data(), shader_code.size(), nullptr, &domain_shader_);
+		assert(SUCCEEDED(hr));
+		break;
+	case ShaderType::GS:
+		SafeRelease(geometry_shader_);
+		hr = Engine::Instance().device()->CreateGeometryShader(
+			shader_code.data(), shader_code.size(), nullptr, &geometry_shader_);
 		assert(SUCCEEDED(hr));
 		break;
 	case ShaderType::PS:
@@ -72,6 +79,7 @@ void Shader::Use() const
 	Engine::Instance().device_context()->VSSetShader(vertex_shader_, nullptr, 0);
 	Engine::Instance().device_context()->HSSetShader(hull_shader_, nullptr, 0);
 	Engine::Instance().device_context()->DSSetShader(domain_shader_, nullptr, 0);
+	Engine::Instance().device_context()->GSSetShader(geometry_shader_, nullptr, 0);
 	Engine::Instance().device_context()->PSSetShader(pixel_shader_, nullptr, 0);
 	Engine::Instance().device_context()->CSSetShader(compute_shader_, nullptr, 0);
 	Engine::Instance().device_context()->IASetInputLayout(input_layout_);

@@ -13,6 +13,9 @@ class ParticleSystem : public SceneObject
 public:
 	struct MatrixBuffer
 	{
+		DirectX::XMFLOAT4 x;
+		DirectX::XMFLOAT4 y;
+		DirectX::XMFLOAT4 size;
 		DirectX::XMFLOAT4X4 view_matrix;
 		DirectX::XMFLOAT4X4 proj_matrix;
 	};
@@ -20,7 +23,6 @@ public:
 	struct Vertex
 	{
 		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT2 tex_coord;
 	};
 
 	struct Particle

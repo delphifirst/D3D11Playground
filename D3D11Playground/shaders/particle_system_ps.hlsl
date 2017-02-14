@@ -1,11 +1,6 @@
 Texture2D shader_texture : register(t0);
 
-SamplerState linear_sampler
-{
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Mirror;
-	AddressV = Mirror;
-};
+SamplerState linear_sampler;
 
 struct PSInput
 {

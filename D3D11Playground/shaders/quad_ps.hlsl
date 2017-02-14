@@ -1,10 +1,6 @@
 Texture2D shader_texture : register(t0);
 
-SamplerState anisotropic_sampler
-{
-	Filter = ANISOTROPIC;
-	MaxAnisotropy = 4;
-};
+SamplerState anisotropic_sampler;
 
 struct PSInput
 {

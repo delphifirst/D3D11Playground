@@ -110,5 +110,8 @@
     <FxCompile Include="shaders\particle_system_vs.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
+    <FxCompile Include="shaders\particle_system_gs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

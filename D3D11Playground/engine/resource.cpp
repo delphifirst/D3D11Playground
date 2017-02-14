@@ -19,6 +19,8 @@ Resource::~Resource()
 		SafeRelease(buffer);
 	for (ID3D11Buffer* buffer : cs_cbuffers_)
 		SafeRelease(buffer);
+	for (ID3D11Buffer* buffer : gs_cbuffers_)
+		SafeRelease(buffer);
 	for (ID3D11ShaderResourceView* shader_resource_view : ps_shader_resource_views_)
 		SafeRelease(shader_resource_view);
 	for (ID3D11ShaderResourceView* shader_resource_view : cs_shader_resource_views_)
@@ -53,6 +55,9 @@ void Resource::AddCBuffer(ShaderType shader, int bytes)
 	case ShaderType::CS:
 		cs_cbuffers_.push_back(cbuffer);
 		break;
+	case ShaderType::GS:
+		gs_cbuffers_.push_back(cbuffer);
+		break;
 	default:
 		assert(false);
 		break;
@@ -80,6 +85,11 @@ void Resource::UpdateCBuffer(ShaderType shader, int slot, void *data, int bytes)
 			cs_cbuffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0, &buffer_map);
 		assert(SUCCEEDED(hr));
 		break;
+	case ShaderType::GS:
+		hr = Engine::Instance().device_context()->Map(
+			gs_cbuffers_[slot], 0, D3D11_MAP_WRITE_DISCARD, 0, &buffer_map);
+		assert(SUCCEEDED(hr));
+		break;
 	default:
 		assert(false);
 		break;
@@ -95,6 +105,9 @@ void Resource::UpdateCBuffer(ShaderType shader, int slot, void *data, int bytes)
 		break;
 	case ShaderType::CS:
 		Engine::Instance().device_context()->Unmap(cs_cbuffers_[slot], 0);
+		break;
+	case ShaderType::GS:
+		Engine::Instance().device_context()->Unmap(gs_cbuffers_[slot], 0);
 		break;
 	default:
 		assert(false);
@@ -283,6 +296,8 @@ void Resource::Use()
 		0, ds_cbuffers_.size(), ds_cbuffers_.data());
 	Engine::Instance().device_context()->CSSetConstantBuffers(
 		0, cs_cbuffers_.size(), cs_cbuffers_.data());
+	Engine::Instance().device_context()->GSSetConstantBuffers(
+		0, gs_cbuffers_.size(), gs_cbuffers_.data());
 	Engine::Instance().device_context()->PSSetShaderResources(
 		0, ps_shader_resource_views_.size(), ps_shader_resource_views_.data());
 	Engine::Instance().device_context()->CSSetShaderResources(

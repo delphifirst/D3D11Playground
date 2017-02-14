@@ -50,6 +50,7 @@ private:
 	std::vector<ID3D11Buffer*> vs_cbuffers_;
 	std::vector<ID3D11Buffer*> ds_cbuffers_;
 	std::vector<ID3D11Buffer*> cs_cbuffers_;
+	std::vector<ID3D11Buffer*> gs_cbuffers_;
 	std::vector<ID3D11ShaderResourceView*> ps_shader_resource_views_;
 	std::vector<ID3D11ShaderResourceView*> cs_shader_resource_views_;
 	std::vector<ID3D11UnorderedAccessView*> cs_unordered_access_views_;

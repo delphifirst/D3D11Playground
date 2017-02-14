@@ -22,11 +22,11 @@ ParticleSystem::ParticleSystem(const wstring& name, const wstring& texture_filen
 		particles_.push_back(new_particle);
 	}
 
-	resource_.AddVertexBuffer(nullptr, sizeof(Vertex), sizeof(Vertex) * particle_num * 3, true);
-	resource_.AddCBuffer(ShaderType::VS, sizeof(MatrixBuffer));
+	resource_.AddVertexBuffer(nullptr, sizeof(Vertex), sizeof(Vertex) * particle_num, true);
+	resource_.AddCBuffer(ShaderType::GS, sizeof(MatrixBuffer));
 	resource_.AddTexture(ShaderType::PS, texture_filename);
 
-	D3D11_INPUT_ELEMENT_DESC input_layout_desc[2];
+	D3D11_INPUT_ELEMENT_DESC input_layout_desc[1];
 
 	input_layout_desc[0].SemanticName = "POSITION";
 	input_layout_desc[0].SemanticIndex = 0;
@@ -36,16 +36,9 @@ ParticleSystem::ParticleSystem(const wstring& name, const wstring& texture_filen
 	input_layout_desc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	input_layout_desc[0].InstanceDataStepRate = 0;
 
-	input_layout_desc[1].SemanticName = "TEXCOORD";
-	input_layout_desc[1].SemanticIndex = 0;
-	input_layout_desc[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	input_layout_desc[1].InputSlot = 0;
-	input_layout_desc[1].AlignedByteOffset = 12;
-	input_layout_desc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	input_layout_desc[1].InstanceDataStepRate = 0;
-
 	shader_.AddVertexShader(L"resources/particle_system_vs.cso", input_layout_desc,
 		sizeof(input_layout_desc) / sizeof(input_layout_desc[0]));
+	shader_.AddShader(ShaderType::GS, L"resources/particle_system_gs.cso");
 	shader_.AddShader(ShaderType::PS, L"resources/particle_system_ps.cso");
 
 	render_state_.ChangeBlendState().RenderTarget[0].BlendEnable = true;
@@ -84,41 +77,29 @@ void ParticleSystem::OnDraw()
 {
 	SceneObject::OnDraw();
 
+	Vertex *vertices = resource_.MapVertexBuffer<Vertex>(0);
+	for (const Particle& p : particles_)
+	{
+		vertices->position = p.position;
+		++vertices;
+	}
+	resource_.UnmapVertexBuffer(0);
+
 	CameraObject* main_camera = Engine::Instance().main_camera();
 	XMMATRIX rotation_y_matrix = XMMatrixRotationY(main_camera->rotation.y);
 	XMMATRIX rotation_x_matrix = XMMatrixRotationX(main_camera->rotation.x);
 	XMMATRIX rotation_z_matrix = XMMatrixRotationZ(main_camera->rotation.z);
 	XMMATRIX billboard_rotation = rotation_z_matrix * rotation_x_matrix * rotation_y_matrix;
-
-	Vertex *vertices = resource_.MapVertexBuffer<Vertex>(0);
-	for (const Particle& p : particles_)
-	{
-		const float kParticleSize = 1;
-		XMVECTOR v0 = XMVectorSet(-kParticleSize / 2, kParticleSize / 2, 0, 1);
-		XMVECTOR v1 = XMVectorSet(3 * kParticleSize / 2, kParticleSize / 2, 0, 1);
-		XMVECTOR v2 = XMVectorSet(-kParticleSize / 2, -3 * kParticleSize / 2, 0, 1);
-		v0 = XMVector3TransformCoord(v0, billboard_rotation);
-		v1 = XMVector3TransformCoord(v1, billboard_rotation);
-		v2 = XMVector3TransformCoord(v2, billboard_rotation);
-
-		XMVECTOR p_position = XMLoadFloat3(&p.position);
-		v0 += p_position;
-		v1 += p_position;
-		v2 += p_position;
-		
-		XMStoreFloat3(&vertices->position, v0);
-		vertices->tex_coord = XMFLOAT2(0, 0);
-		++vertices;
-		XMStoreFloat3(&vertices->position, v1);
-		vertices->tex_coord = XMFLOAT2(2, 0);
-		++vertices;
-		XMStoreFloat3(&vertices->position, v2);
-		vertices->tex_coord = XMFLOAT2(0, 2);
-		++vertices;
-	}
-	resource_.UnmapVertexBuffer(0);
+	XMVECTOR x = billboard_rotation.r[0];
+	XMVECTOR y = billboard_rotation.r[1];
 
 	MatrixBuffer matrix_buffer;
+
+	XMStoreFloat4(&matrix_buffer.x, x);
+	XMStoreFloat4(&matrix_buffer.y, y);
+	const float kParticleSize = 0.1;
+	XMStoreFloat4(&matrix_buffer.size, XMVectorSet(kParticleSize, kParticleSize, 0, 0));
+
 	XMMATRIX transposed_matrix;
 
 	transposed_matrix = Engine::Instance().main_camera()->GetViewMatrix();
@@ -130,11 +111,11 @@ void ParticleSystem::OnDraw()
 	transposed_matrix = XMMatrixTranspose(transposed_matrix);
 	XMStoreFloat4x4(&matrix_buffer.proj_matrix, transposed_matrix);
 
-	resource_.UpdateCBuffer(ShaderType::VS, 0, &matrix_buffer, sizeof(matrix_buffer));
+	resource_.UpdateCBuffer(ShaderType::GS, 0, &matrix_buffer, sizeof(matrix_buffer));
 
 	Engine::Instance().device_context()->IASetPrimitiveTopology(
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	Engine::Instance().device_context()->Draw(particles_.size() * 3, 0);
+		D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	Engine::Instance().device_context()->Draw(particles_.size(), 0);
 }
 
 float ParticleSystem::RandomInRange(float min_val, float max_val)

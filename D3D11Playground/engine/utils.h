@@ -7,7 +7,7 @@
 
 enum class ShaderType
 {
-	VS, PS, DS, HS, CS
+	VS, PS, DS, HS, CS, GS
 };
 
 class AppError

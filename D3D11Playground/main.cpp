@@ -27,7 +27,7 @@ void InitSceneObjects()
 		L"resources/madoka.dds"));*/
 
 	Engine::Instance().AddTopLevelObject(new ParticleSystem(
-		L"particle_system", L"resources/particle.dds", 0, 1, 0.5, 3, 1000));
+		L"particle_system", L"resources/particle.dds", 0, 1, 0.5, 3, 3600000));
 }
 
 int wmain()
