@@ -66,6 +66,14 @@ public:
 	virtual void Use() const;
 };
 
+class GeometrySOShader :public Shader<ID3D11GeometryShader>
+{
+public:
+	GeometrySOShader(const std::wstring& source_filename);
+	void UpdateOutputLayout(D3D11_SO_DECLARATION_ENTRY output_layout[], int output_elem_count, const std::vector<UINT>& strides);
+	virtual void Use() const;
+};
+
 class PixelShader :public Shader<ID3D11PixelShader>
 {
 public:

@@ -84,6 +84,25 @@ void GeometryShader::Use() const
 	Engine::Instance().device_context()->GSSetShader(shader_, nullptr, 0);
 }
 
+GeometrySOShader::GeometrySOShader(const wstring& source_filename)
+	:Shader(source_filename)
+{
+}
+
+void GeometrySOShader::UpdateOutputLayout(D3D11_SO_DECLARATION_ENTRY output_layout[], 
+	int output_elem_count, const vector<UINT>& strides)
+{
+	HRESULT hr = Engine::Instance().device()->CreateGeometryShaderWithStreamOutput(
+		shader_code_.data(), shader_code_.size(), output_layout, output_elem_count,
+		strides.data(), strides.size(), D3D11_SO_NO_RASTERIZED_STREAM, nullptr, &shader_);
+	assert(SUCCEEDED(hr));
+}
+
+void GeometrySOShader::Use() const
+{
+	Engine::Instance().device_context()->GSSetShader(shader_, nullptr, 0);
+}
+
 PixelShader::PixelShader(const wstring& source_filename)
 	:Shader(source_filename)
 {
