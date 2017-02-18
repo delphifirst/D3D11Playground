@@ -23,9 +23,14 @@ public:
 		DirectX::XMFLOAT4X4 proj_matrix;
 	};
 
-	struct Vertex
+	struct SOBuffer
 	{
-		DirectX::XMFLOAT3 position;
+		DirectX::XMFLOAT3 emit_position;
+		float min_speed;
+		float max_speed;
+		float min_life_time;
+		float max_life_time;
+		float delta_time;
 	};
 
 	struct Particle
@@ -46,6 +51,7 @@ public:
 private:
 	VertexShader vertex_shader_;
 	GeometryShader geometry_shader_;
+	GeometrySOShader geometry_so_shader_;
 	PixelShader pixel_shader_;
 	RenderState render_state_;
 	Resource resource_;
@@ -55,8 +61,10 @@ private:
 	std::default_random_engine random_engine;
 	std::uniform_real_distribution<float> random;
 
-	std::vector<Particle> particles_;
+	double last_delta_time_ = 0;
+	int current_vertex_buffer_index_ = 0;
 
 	float min_speed_, max_speed_;
 	float min_life_time_, max_life_time_;
+	int particle_num_;
 };

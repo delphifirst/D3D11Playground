@@ -1,43 +1,41 @@
-cbuffer PerObject : register(b0)
+cbuffer PerObject : register(b1)
 {
-	float4 x;
-	float4 y;
-	float4 size;
-	float4x4 view_matrix;
-	float4x4 proj_matrix;
+	float3 emit_position;
+	float min_speed;
+	float max_speed;
+	float min_life_time;
+	float max_life_time;
+	float delta_time;
 };
 
-struct GSInput
+struct Particle
 {
-	float4 position: POSITION;
+	float3 position: POSITION;
+	float3 speed: SPEED;
+	float2 life_time_info: LIFE_TIME_INFO;
 };
 
-struct GSOutput
+[maxvertexcount(1)]
+void main(point Particle input[1], inout PointStream<Particle> output_stream)
 {
-	float4 position: SV_POSITION;
-	float2 tex_coord: TEXCOORD;
-};
+	Particle output;
 
-[maxvertexcount(3)]
-void main(point GSInput input[1], inout TriangleStream<GSOutput> output_stream)
-{
-	GSOutput output;
+	float life_time = input[0].life_time_info.x;
+	float current_life_time = input[0].life_time_info.y;
 
-	output.position = input[0].position + (-size.x / 2) * x + (size.y / 2) * y;
-	output.position = mul(output.position, view_matrix);
-	output.position = mul(output.position, proj_matrix);
-	output.tex_coord = float2(0, 0);
-	output_stream.Append(output);
-
-	output.position = input[0].position + (3 * size.x / 2) * x + (size.y / 2) * y;
-	output.position = mul(output.position, view_matrix);
-	output.position = mul(output.position, proj_matrix);
-	output.tex_coord = float2(2, 0);
-	output_stream.Append(output);
-
-	output.position = input[0].position + (-size.x / 2) * x + (- 3 * size.y / 2) * y;
-	output.position = mul(output.position, view_matrix);
-	output.position = mul(output.position, proj_matrix);
-	output.tex_coord = float2(0, 2);
+	if (current_life_time < life_time)
+	{
+		output.life_time_info.x = life_time;
+		output.life_time_info.y = current_life_time + delta_time;
+		output.speed = input[0].speed;
+		output.position = input[0].position + delta_time * output.speed;
+	}
+	else
+	{
+		output.life_time_info.x = life_time;
+		output.life_time_info.y = 0;
+		output.speed = input[0].speed;
+		output.position = emit_position;
+	}
 	output_stream.Append(output);
 }

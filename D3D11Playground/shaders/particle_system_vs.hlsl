@@ -1,16 +1,11 @@
-struct VSInput
+struct Particle
 {
-	float4 position: POSITION;
+	float3 position: POSITION;
+	float3 speed: SPEED;
+	float2 life_time_info: LIFE_TIME_INFO;
 };
 
-struct VSOutput
+Particle main(Particle input)
 {
-	float4 position: POSITION;
-};
-
-VSOutput main(VSInput input)
-{
-	VSOutput output;
-	output.position = input.position;
-	return output;
+	return input;
 }

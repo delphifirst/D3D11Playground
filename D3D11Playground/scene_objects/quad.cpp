@@ -22,7 +22,7 @@ Quad::Quad(const wstring& name, FXMVECTOR a, FXMVECTOR b,
 	vertices[2].tex_coord = XMFLOAT2(0, 1);
 	XMStoreFloat3(&vertices[3].position, d);
 	vertices[3].tex_coord = XMFLOAT2(1, 1);
-	resource_.AddVertexBuffer(vertices, sizeof(Vertex), sizeof(vertices), false);
+	resource_.AddVertexBuffer(vertices, sizeof(Vertex), sizeof(vertices), false, false);
 
 	resource_.AddCBuffer(ShaderType::DS, sizeof(MatrixBuffer));
 	resource_.AddTexture(ShaderType::PS, texture_filename);

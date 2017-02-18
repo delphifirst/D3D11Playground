@@ -10,6 +10,8 @@ cbuffer PerObject : register(b0)
 struct GSInput
 {
 	float4 position: POSITION;
+	float4 speed: SPEED;
+	float2 life_time_info: LIFE_TIME_INFO;
 };
 
 struct GSOutput

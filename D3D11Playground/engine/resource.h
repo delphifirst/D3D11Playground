@@ -20,7 +20,7 @@ public:
 	void AddCBuffer(ShaderType shader, int bytes);
 	void UpdateCBuffer(ShaderType shader, int slot, void *data, int bytes);
 
-	void AddVertexBuffer(void* vertex_data, UINT stride, int bytes, bool is_dynamic);
+	void AddVertexBuffer(void* vertex_data, UINT stride, int bytes, bool is_dynamic, bool is_stream_out);
 	template<typename T>
 	T* MapVertexBuffer(int slot)
 	{
@@ -43,6 +43,7 @@ public:
 	void Use();
 	void IASetVertexBuffers(std::initializer_list<int> indices);
 	void SoSetTargets(std::initializer_list<int> indices);
+	void SoClearTargets();
 
 private:
 	ID3D11Buffer* CreateStructuredBuffer(void* data, int elem_bytes, int elem_count);

@@ -116,12 +116,12 @@ void Resource::UpdateCBuffer(ShaderType shader, int slot, void *data, int bytes)
 	}
 }
 
-void Resource::AddVertexBuffer(void* vertex_data, UINT stride, int bytes, bool is_dynamic)
+void Resource::AddVertexBuffer(void* vertex_data, UINT stride, int bytes, bool is_dynamic, bool is_stream_out)
 {
 	D3D11_BUFFER_DESC buffer_desc;
 	buffer_desc.Usage = is_dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
 	buffer_desc.ByteWidth = bytes;
-	buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER | (is_stream_out ? D3D11_BIND_STREAM_OUTPUT : 0);
 	buffer_desc.CPUAccessFlags = is_dynamic ? D3D11_CPU_ACCESS_WRITE : 0;
 	buffer_desc.MiscFlags = 0;
 	buffer_desc.StructureByteStride = 0;
@@ -359,6 +359,13 @@ void Resource::SoSetTargets(initializer_list<int> indices)
 	}
 	Engine::Instance().device_context()->SOSetTargets(
 		buffers.size(), buffers.data(), offsets.data());
+}
+
+void Resource::SoClearTargets()
+{
+	ID3D11Buffer* null_buffers[] = { nullptr };
+	UINT offsets[] = { 0 };
+	Engine::Instance().device_context()->SOSetTargets(1, null_buffers, offsets);
 }
 
 ID3D11Buffer* Resource::CreateStructuredBuffer(void* data, int elem_bytes, int elem_count)
