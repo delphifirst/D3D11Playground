@@ -1,5 +1,7 @@
 #include "utils.h"
 
+using namespace std;
+
 int GetPixelSize(DXGI_FORMAT format)
 {
 	switch (format)
@@ -120,4 +122,18 @@ int GetPixelSize(DXGI_FORMAT format)
 	default:
 		throw AppError(L"Cannot determine format element size; invalid format specified.");
 	}
+}
+
+vector<char> ReadFile(const wstring& filename)
+{
+	vector<char> content;
+	ifstream fin(filename, ios_base::binary);
+	if (!fin)
+		throw AppError(L"Cannot open shader file: " + filename);
+	fin.seekg(0, ios_base::end);
+	int file_size = fin.tellg();
+	fin.seekg(0, ios_base::beg);
+	content.resize(file_size);
+	fin.read(content.data(), file_size);
+	return content;
 }

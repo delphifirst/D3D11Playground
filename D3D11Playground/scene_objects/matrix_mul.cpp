@@ -10,9 +10,9 @@ using namespace std;
 
 constexpr int MatrixMul::kMatrixSize;
 
-MatrixMul::MatrixMul(const wstring& name) : Object(name)
+MatrixMul::MatrixMul(const wstring& name) : Object(name),
+	compute_shader_(L"resources/matrix_mul_cs.cso")
 {
-	shader_.AddShader(ShaderType::CS, L"resources/matrix_mul_cs.cso");
 	default_random_engine random_engine;
 	uniform_real_distribution<> dist;
 	for (int i = 0; i < kMatrixSize * kMatrixSize; ++i)
@@ -28,7 +28,8 @@ void MatrixMul::OnDraw()
 {
 	resource_.Use();
 	render_state_.Use();
-	shader_.Use();
+	ClearAllShaders();
+	compute_shader_.Use();
 
 	ZeroMemory(cpu_result_, sizeof(cpu_result_));
 	chrono::time_point<chrono::steady_clock> start = chrono::steady_clock::now();

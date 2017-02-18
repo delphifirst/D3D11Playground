@@ -44,7 +44,9 @@ public:
 	virtual void OnDraw() override;
 
 private:
-	Shader shader_;
+	VertexShader vertex_shader_;
+	GeometryShader geometry_shader_;
+	PixelShader pixel_shader_;
 	RenderState render_state_;
 	Resource resource_;
 

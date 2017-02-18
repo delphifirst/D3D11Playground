@@ -9,7 +9,9 @@ using namespace DirectX;
 
 Quad::Quad(const wstring& name, FXMVECTOR a, FXMVECTOR b,
 	FXMVECTOR c, CXMVECTOR d, const wstring &texture_filename)
-	: Object(name)
+	: Object(name), 
+	vertex_shader_(L"resources/quad_vs.cso"), hull_shader_(L"resources/quad_hs.cso"),
+	domain_shader_(L"resources/quad_ds.cso"), pixel_shader_(L"resources/quad_ps.cso")
 {
 	Vertex vertices[4];
 	XMStoreFloat3(&vertices[0].position, a);
@@ -43,19 +45,19 @@ Quad::Quad(const wstring& name, FXMVECTOR a, FXMVECTOR b,
 	input_layout_desc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	input_layout_desc[1].InstanceDataStepRate = 0;
 
-	shader_.AddVertexShader(L"resources/quad_vs.cso", input_layout_desc,
+	vertex_shader_.UpdateInputLayout(input_layout_desc,
 		sizeof(input_layout_desc) / sizeof(input_layout_desc[0]));
-	shader_.AddShader(ShaderType::HS, L"resources/quad_hs.cso");
-	shader_.AddShader(ShaderType::DS, L"resources/quad_ds.cso");
-	shader_.AddShader(ShaderType::PS, L"resources/quad_ps.cso");
-
 }
 
 void Quad::OnDraw()
 {
 	resource_.Use();
 	render_state_.Use();
-	shader_.Use();
+	ClearAllShaders();
+	vertex_shader_.Use();
+	hull_shader_.Use();
+	domain_shader_.Use();
+	pixel_shader_.Use();
 
 	resource_.IASetVertexBuffers({ 0 });
 

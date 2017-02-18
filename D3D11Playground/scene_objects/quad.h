@@ -31,7 +31,10 @@ public:
 
 	virtual void OnDraw() override;
 private:
-	Shader shader_;
+	VertexShader vertex_shader_;
+	HullShader hull_shader_;
+	DomainShader domain_shader_;
+	PixelShader pixel_shader_;
 	RenderState render_state_;
 	Resource resource_;
 };

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <fstream>
+#include <vector>
 
 #include <Windows.h>
 #include <d3d11.h>
@@ -36,3 +38,4 @@ void SafeRelease(T* &obj)
 }
 
 int GetPixelSize(DXGI_FORMAT format);
+std::vector<char> ReadFile(const std::wstring& filename);

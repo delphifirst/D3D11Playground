@@ -10,7 +10,9 @@ using namespace DirectX;
 
 ParticleSystem::ParticleSystem(const wstring& name, const wstring& texture_filename,
 	float min_speed, float max_speed, float min_life_time, float max_life_time, int particle_num)
-	: Object(name), min_speed_(min_speed), max_speed_(max_speed), min_life_time_(min_life_time), max_life_time_(max_life_time)
+	: Object(name), vertex_shader_(L"resources/particle_system_vs.cso"),
+	geometry_shader_(L"resources/particle_system_gs.cso"), pixel_shader_(L"resources/particle_system_ps.cso"),
+	min_speed_(min_speed), max_speed_(max_speed), min_life_time_(min_life_time), max_life_time_(max_life_time)
 {
 	for (int i = 0; i < particle_num; ++i)
 	{
@@ -36,10 +38,8 @@ ParticleSystem::ParticleSystem(const wstring& name, const wstring& texture_filen
 	input_layout_desc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	input_layout_desc[0].InstanceDataStepRate = 0;
 
-	shader_.AddVertexShader(L"resources/particle_system_vs.cso", input_layout_desc,
+	vertex_shader_.UpdateInputLayout(input_layout_desc,
 		sizeof(input_layout_desc) / sizeof(input_layout_desc[0]));
-	shader_.AddShader(ShaderType::GS, L"resources/particle_system_gs.cso");
-	shader_.AddShader(ShaderType::PS, L"resources/particle_system_ps.cso");
 
 	render_state_.ChangeBlendState().RenderTarget[0].BlendEnable = true;
 	render_state_.ChangeBlendState().RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
@@ -77,7 +77,10 @@ void ParticleSystem::OnDraw()
 {
 	resource_.Use();
 	render_state_.Use();
-	shader_.Use();
+	ClearAllShaders();
+	vertex_shader_.Use();
+	geometry_shader_.Use();
+	pixel_shader_.Use();
 
 	resource_.IASetVertexBuffers({ 0 });
 

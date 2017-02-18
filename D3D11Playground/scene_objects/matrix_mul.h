@@ -21,7 +21,7 @@ public:
 	virtual void OnDraw() override;
 
 private:
-	Shader shader_;
+	ComputeShader compute_shader_;
 	RenderState render_state_;
 	Resource resource_;
 
