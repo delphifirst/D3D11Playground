@@ -13,7 +13,7 @@ struct PatchTess
 
 struct HSOutput
 {
-	float4 position: POSITION;
+	float3 position: POSITION;
 	float2 tex_coord: TEXCOORD;
 };
 
@@ -27,7 +27,7 @@ struct DSOutput
 DSOutput main(PatchTess patch_tess, float2 uv: SV_DomainLocation,
 	const OutputPatch<HSOutput, 4> quad)
 {
-	HSOutput output;
+	DSOutput output;
 
 	float3 p1 = lerp(quad[0].position, quad[1].position, uv.x);
 	float3 p2 = lerp(quad[2].position, quad[3].position, uv.x);

@@ -12,7 +12,7 @@ class MatrixMul : public Object
 public:
 	struct CSBuffer
 	{
-		int size;
+		unsigned int size;
 		int unused[3];
 	};
 
@@ -25,7 +25,7 @@ private:
 	RenderState render_state_;
 	Resource resource_;
 
-	static constexpr int kMatrixSize = 32;
+	static constexpr unsigned int kMatrixSize = 32;
 	float input_data_[kMatrixSize * kMatrixSize];
 	float cpu_result_[kMatrixSize * kMatrixSize];
 	float gpu_result_[kMatrixSize * kMatrixSize];

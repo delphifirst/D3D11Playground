@@ -8,7 +8,7 @@
 
 using namespace std;
 
-constexpr int MatrixMul::kMatrixSize;
+constexpr unsigned int MatrixMul::kMatrixSize;
 
 MatrixMul::MatrixMul(const wstring& name) : Object(name),
 	compute_shader_(L"resources/matrix_mul_cs.cso")
