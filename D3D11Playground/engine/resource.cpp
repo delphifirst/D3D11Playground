@@ -7,6 +7,7 @@
 #include "utils.h"
 #include "engine.h"
 
+using namespace std;
 using namespace DirectX;
 
 Resource::~Resource()
@@ -304,10 +305,26 @@ void Resource::Use()
 		0, cs_shader_resource_views_.size(), cs_shader_resource_views_.data());
 	Engine::Instance().device_context()->CSSetUnorderedAccessViews(
 		0, cs_unordered_access_views_.size(), cs_unordered_access_views_.data(), nullptr);
+}
 
+void Resource::IASetVertexBuffers(initializer_list<int> indices)
+{
+	vector<ID3D11Buffer*> buffers;
+	vector<UINT> strides;
+	vector<UINT> offsets;
+	for (int index : indices)
+	{
+		buffers.push_back(vertex_buffers_[index]);
+		strides.push_back(vertex_buffer_strides_[index]);
+		offsets.push_back(vertex_buffer_offsets_[index]);
+	}
 	Engine::Instance().device_context()->IASetVertexBuffers(
-		0, vertex_buffers_.size(), vertex_buffers_.data(), vertex_buffer_strides_.data(), 
-		vertex_buffer_offsets_.data());
+		0, buffers.size(), buffers.data(), strides.data(), offsets.data());
+}
+
+void Resource::SoSetTargets(initializer_list<int> indices)
+{
+
 }
 
 ID3D11Buffer* Resource::CreateStructuredBuffer(void* data, int elem_bytes, int elem_count)

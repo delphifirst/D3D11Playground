@@ -132,6 +132,8 @@ void Quad::OnDraw()
 {
 	SceneObject::OnDraw();
 
+	resource_.IASetVertexBuffers({ 0 });
+
 	ComputeShaderTest();
 
 	MatrixBuffer matrix_buffer;

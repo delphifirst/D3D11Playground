@@ -77,6 +77,8 @@ void ParticleSystem::OnDraw()
 {
 	SceneObject::OnDraw();
 
+	resource_.IASetVertexBuffers({ 0 });
+
 	Vertex *vertices = resource_.MapVertexBuffer<Vertex>(0);
 	for (const Particle& p : particles_)
 	{

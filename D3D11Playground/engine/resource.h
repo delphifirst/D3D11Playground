@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <initializer_list>
 
 #include <d3d11.h>
 
@@ -39,6 +40,8 @@ public:
 	ID3D11UnorderedAccessView* GetRWStructuredBuffer(ShaderType shader, int slot);
 
 	void Use();
+	void IASetVertexBuffers(std::initializer_list<int> indices);
+	void SoSetTargets(std::initializer_list<int> indices);
 
 private:
 	ID3D11Buffer* CreateStructuredBuffer(void* data, int elem_bytes, int elem_count);

@@ -15,19 +15,19 @@ using namespace DirectX;
 
 void InitSceneObjects()
 {
-	/*XMVECTORF32 quad_points[4] = {
-		{ -5, 0, 5, 1 },
-		{ 5, 0, 5, 1 },
-		{ -5, 0, -5, 1 },
-		{ 5, 0, -5, 1 },
-	};
-	Engine::Instance().AddTopLevelObject(new Quad(
-		L"quad",
-		quad_points[0], quad_points[1], quad_points[2], quad_points[3],
-		L"resources/madoka.dds"));*/
+	//XMVECTORF32 quad_points[4] = {
+	//	{ -5, 0, 5, 1 },
+	//	{ 5, 0, 5, 1 },
+	//	{ -5, 0, -5, 1 },
+	//	{ 5, 0, -5, 1 },
+	//};
+	//Engine::Instance().AddTopLevelObject(new Quad(
+	//	L"quad",
+	//	quad_points[0], quad_points[1], quad_points[2], quad_points[3],
+	//	L"resources/madoka.dds"));
 
 	Engine::Instance().AddTopLevelObject(new ParticleSystem(
-		L"particle_system", L"resources/particle.dds", 0, 1, 0.5, 3, 3600000));
+		L"particle_system", L"resources/particle.dds", 0, 1, 0.5, 3, 10000));
 }
 
 int wmain()
