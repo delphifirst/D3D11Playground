@@ -161,6 +161,7 @@
     <ClCompile Include="engine\shader.cpp" />
     <ClCompile Include="engine\utils.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="scene_objects\matrix_mul.cpp" />
     <ClCompile Include="scene_objects\particle_system.cpp" />
     <ClCompile Include="scene_objects\quad.cpp" />
   </ItemGroup>
@@ -175,6 +176,7 @@
     <ClInclude Include="engine\scene_object.h" />
     <ClInclude Include="engine\shader.h" />
     <ClInclude Include="engine\utils.h" />
+    <ClInclude Include="scene_objects\matrix_mul.h" />
     <ClInclude Include="scene_objects\particle_system.h" />
     <ClInclude Include="scene_objects\quad.h" />
   </ItemGroup>
@@ -208,7 +210,7 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/resources/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)/resources/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="shaders\quad_cs.hlsl">
+    <FxCompile Include="shaders\matrix_mul_cs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>

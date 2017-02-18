@@ -49,6 +49,9 @@
     <ClCompile Include="scene_objects\particle_system.cpp">
       <Filter>scene_objects</Filter>
     </ClCompile>
+    <ClCompile Include="scene_objects\matrix_mul.cpp">
+      <Filter>scene_objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scene_objects\quad.h">
@@ -87,6 +90,9 @@
     <ClInclude Include="scene_objects\particle_system.h">
       <Filter>scene_objects</Filter>
     </ClInclude>
+    <ClInclude Include="scene_objects\matrix_mul.h">
+      <Filter>scene_objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders\quad_ps.hlsl">
@@ -101,9 +107,6 @@
     <FxCompile Include="shaders\quad_hs.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\quad_cs.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
     <FxCompile Include="shaders\particle_system_ps.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
@@ -111,6 +114,9 @@
       <Filter>shaders</Filter>
     </FxCompile>
     <FxCompile Include="shaders\particle_system_gs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\matrix_mul_cs.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -37,7 +37,8 @@ public:
 	void AddTexture(ShaderType shader, int width, int height, DXGI_FORMAT format, void* data);
 	void AddStructuredBuffer(ShaderType shader, void* data, int elem_bytes, int elem_count);
 	void AddRWStructuredBuffer(ShaderType shader, void* data, int elem_bytes, int elem_count);
-	ID3D11UnorderedAccessView* GetRWStructuredBuffer(ShaderType shader, int slot);
+
+	void DumpRWStructuredBuffer(ShaderType shader, int slot, int elem_bytes, int elem_count, void* data_out);
 
 	void Use();
 	void IASetVertexBuffers(std::initializer_list<int> indices);

@@ -8,6 +8,7 @@
 #include "engine/utils.h"
 
 #include "scene_objects/quad.h"
+#include "scene_objects/matrix_mul.h"
 #include "scene_objects/particle_system.h"
 
 using namespace std;
@@ -25,6 +26,8 @@ void InitSceneObjects()
 	//	L"quad",
 	//	quad_points[0], quad_points[1], quad_points[2], quad_points[3],
 	//	L"resources/madoka.dds"));
+
+	Engine::Instance().AddTopLevelObject(new MatrixMul(L"matrix_mul"));
 
 	Engine::Instance().AddTopLevelObject(new ParticleSystem(
 		L"particle_system", L"resources/particle.dds", 0, 1, 0.5, 3, 10000));

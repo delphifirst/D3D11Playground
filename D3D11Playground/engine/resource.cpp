@@ -276,17 +276,43 @@ void Resource::AddRWStructuredBuffer(ShaderType shader, void* data, int elem_byt
 	}
 }
 
-ID3D11UnorderedAccessView* Resource::GetRWStructuredBuffer(ShaderType shader, int slot)
+void Resource::DumpRWStructuredBuffer(ShaderType shader, int slot, int elem_bytes, int elem_count, void* data_out)
 {
+	ID3D11UnorderedAccessView* access_view = nullptr;
 	switch (shader)
 	{
 	case ShaderType::CS:
-		return cs_unordered_access_views_[slot];
+		access_view = cs_unordered_access_views_[slot];
 		break;
 	default:
 		assert(false);
 		break;
 	}
+
+	// Create a temporary state buffer
+	ID3D11Buffer* gpu_result_buffer_stage = nullptr;
+	D3D11_BUFFER_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	desc.ByteWidth = elem_bytes * elem_count;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	desc.Usage = D3D11_USAGE_STAGING;
+	desc.BindFlags = 0;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+	desc.StructureByteStride = elem_bytes;
+	HRESULT hr = Engine::Instance().device()->CreateBuffer(&desc, nullptr, &gpu_result_buffer_stage);
+	assert(SUCCEEDED(hr));
+
+	ID3D11Resource* gpu_result_buffer_on_gpu = nullptr;
+	access_view->GetResource(&gpu_result_buffer_on_gpu);
+	Engine::Instance().device_context()->CopyResource(gpu_result_buffer_stage, gpu_result_buffer_on_gpu);
+	SafeRelease(gpu_result_buffer_on_gpu);
+
+	D3D11_MAPPED_SUBRESOURCE mapped_resource;
+	hr = Engine::Instance().device_context()->Map(gpu_result_buffer_stage, 0, D3D11_MAP_READ, 0, &mapped_resource);
+	assert(SUCCEEDED(hr));
+	memcpy(data_out, mapped_resource.pData, elem_bytes * elem_count);
+	Engine::Instance().device_context()->Unmap(gpu_result_buffer_stage, 0);
+	SafeRelease(gpu_result_buffer_stage);
 }
 
 void Resource::Use()
