@@ -9,7 +9,7 @@ using namespace DirectX;
 
 Quad::Quad(const wstring& name, FXMVECTOR a, FXMVECTOR b,
 	FXMVECTOR c, CXMVECTOR d, const wstring &texture_filename)
-	: SceneObject(name)
+	: Object(name)
 {
 	Vertex vertices[4];
 	XMStoreFloat3(&vertices[0].position, a);
@@ -53,7 +53,9 @@ Quad::Quad(const wstring& name, FXMVECTOR a, FXMVECTOR b,
 
 void Quad::OnDraw()
 {
-	SceneObject::OnDraw();
+	resource_.Use();
+	render_state_.Use();
+	shader_.Use();
 
 	resource_.IASetVertexBuffers({ 0 });
 

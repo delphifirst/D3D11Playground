@@ -2,9 +2,12 @@
 
 #include <string>
 
-#include "../engine/scene_object.h"
+#include "../engine/object.h"
+#include "../engine/shader.h"
+#include "../engine/render_state.h"
+#include "../engine/resource.h"
 
-class MatrixMul : public SceneObject
+class MatrixMul : public Object
 {
 public:
 	struct CSBuffer
@@ -18,6 +21,10 @@ public:
 	virtual void OnDraw() override;
 
 private:
+	Shader shader_;
+	RenderState render_state_;
+	Resource resource_;
+
 	static constexpr int kMatrixSize = 32;
 	float input_data_[kMatrixSize * kMatrixSize];
 	float cpu_result_[kMatrixSize * kMatrixSize];

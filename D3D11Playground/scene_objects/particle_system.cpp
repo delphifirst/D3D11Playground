@@ -10,7 +10,7 @@ using namespace DirectX;
 
 ParticleSystem::ParticleSystem(const wstring& name, const wstring& texture_filename,
 	float min_speed, float max_speed, float min_life_time, float max_life_time, int particle_num)
-	: SceneObject(name), min_speed_(min_speed), max_speed_(max_speed), min_life_time_(min_life_time), max_life_time_(max_life_time)
+	: Object(name), min_speed_(min_speed), max_speed_(max_speed), min_life_time_(min_life_time), max_life_time_(max_life_time)
 {
 	for (int i = 0; i < particle_num; ++i)
 	{
@@ -51,7 +51,7 @@ ParticleSystem::ParticleSystem(const wstring& name, const wstring& texture_filen
 
 void ParticleSystem::OnUpdate(double delta_time)
 {
-	SceneObject::OnUpdate(delta_time);
+	Object::OnUpdate(delta_time);
 
 	for (Particle &p : particles_)
 	{
@@ -75,7 +75,9 @@ void ParticleSystem::OnUpdate(double delta_time)
 
 void ParticleSystem::OnDraw()
 {
-	SceneObject::OnDraw();
+	resource_.Use();
+	render_state_.Use();
+	shader_.Use();
 
 	resource_.IASetVertexBuffers({ 0 });
 

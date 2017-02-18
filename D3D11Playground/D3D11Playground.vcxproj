@@ -157,7 +157,6 @@
     <ClCompile Include="engine\object.cpp" />
     <ClCompile Include="engine\render_state.cpp" />
     <ClCompile Include="engine\resource.cpp" />
-    <ClCompile Include="engine\scene_object.cpp" />
     <ClCompile Include="engine\shader.cpp" />
     <ClCompile Include="engine\utils.cpp" />
     <ClCompile Include="main.cpp" />
@@ -173,7 +172,6 @@
     <ClInclude Include="engine\object.h" />
     <ClInclude Include="engine\render_state.h" />
     <ClInclude Include="engine\resource.h" />
-    <ClInclude Include="engine\scene_object.h" />
     <ClInclude Include="engine\shader.h" />
     <ClInclude Include="engine\utils.h" />
     <ClInclude Include="scene_objects\matrix_mul.h" />
@@ -187,6 +185,14 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders\particle_system_gs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/resources/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)/resources/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="shaders\particle_system_gsso.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>

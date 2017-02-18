@@ -6,9 +6,12 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#include "../engine/scene_object.h"
+#include "../engine/object.h"
+#include "../engine/shader.h"
+#include "../engine/render_state.h"
+#include "../engine/resource.h"
 
-class ParticleSystem : public SceneObject
+class ParticleSystem : public Object
 {
 public:
 	struct MatrixBuffer
@@ -41,6 +44,10 @@ public:
 	virtual void OnDraw() override;
 
 private:
+	Shader shader_;
+	RenderState render_state_;
+	Resource resource_;
+
 	float RandomInRange(float min_val, float max_val);
 	DirectX::XMVECTOR XM_CALLCONV RandomDirection();
 	std::default_random_engine random_engine;

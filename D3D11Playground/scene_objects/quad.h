@@ -5,9 +5,12 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#include "../engine/scene_object.h"
+#include "../engine/object.h"
+#include "../engine/shader.h"
+#include "../engine/render_state.h"
+#include "../engine/resource.h"
 
-class Quad : public SceneObject
+class Quad : public Object
 {
 public:
 	struct MatrixBuffer
@@ -27,5 +30,8 @@ public:
 		DirectX::FXMVECTOR c, DirectX::CXMVECTOR d, const std::wstring &texture_filename);
 
 	virtual void OnDraw() override;
-
+private:
+	Shader shader_;
+	RenderState render_state_;
+	Resource resource_;
 };

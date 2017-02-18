@@ -16,16 +16,16 @@ using namespace DirectX;
 
 void InitSceneObjects()
 {
-	//XMVECTORF32 quad_points[4] = {
-	//	{ -5, 0, 5, 1 },
-	//	{ 5, 0, 5, 1 },
-	//	{ -5, 0, -5, 1 },
-	//	{ 5, 0, -5, 1 },
-	//};
-	//Engine::Instance().AddTopLevelObject(new Quad(
-	//	L"quad",
-	//	quad_points[0], quad_points[1], quad_points[2], quad_points[3],
-	//	L"resources/madoka.dds"));
+	XMVECTORF32 quad_points[4] = {
+		{ -5, 0, 5, 1 },
+		{ 5, 0, 5, 1 },
+		{ -5, 0, -5, 1 },
+		{ 5, 0, -5, 1 },
+	};
+	Engine::Instance().AddTopLevelObject(new Quad(
+		L"quad",
+		quad_points[0], quad_points[1], quad_points[2], quad_points[3],
+		L"resources/madoka.dds"));
 
 	Engine::Instance().AddTopLevelObject(new MatrixMul(L"matrix_mul"));
 

@@ -34,9 +34,6 @@
     <ClCompile Include="engine\resource.cpp">
       <Filter>engine</Filter>
     </ClCompile>
-    <ClCompile Include="engine\scene_object.cpp">
-      <Filter>engine</Filter>
-    </ClCompile>
     <ClCompile Include="engine\shader.cpp">
       <Filter>engine</Filter>
     </ClCompile>
@@ -73,9 +70,6 @@
       <Filter>engine</Filter>
     </ClInclude>
     <ClInclude Include="engine\resource.h">
-      <Filter>engine</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\scene_object.h">
       <Filter>engine</Filter>
     </ClInclude>
     <ClInclude Include="engine\shader.h">
@@ -117,6 +111,9 @@
       <Filter>shaders</Filter>
     </FxCompile>
     <FxCompile Include="shaders\matrix_mul_cs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\particle_system_gsso.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>

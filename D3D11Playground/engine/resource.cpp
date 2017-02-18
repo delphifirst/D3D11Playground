@@ -350,7 +350,15 @@ void Resource::IASetVertexBuffers(initializer_list<int> indices)
 
 void Resource::SoSetTargets(initializer_list<int> indices)
 {
-
+	vector<ID3D11Buffer*> buffers;
+	vector<UINT> offsets;
+	for (int index : indices)
+	{
+		buffers.push_back(vertex_buffers_[index]);
+		offsets.push_back(vertex_buffer_offsets_[index]);
+	}
+	Engine::Instance().device_context()->SOSetTargets(
+		buffers.size(), buffers.data(), offsets.data());
 }
 
 ID3D11Buffer* Resource::CreateStructuredBuffer(void* data, int elem_bytes, int elem_count)
