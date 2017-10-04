@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{50e90d8a-befd-458c-8555-8be772d85e08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{ad2ef513-df49-447c-8f6d-b7ad25660939}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\interface">
+      <UniqueIdentifier>{13a02412-2e3b-47a8-9c5d-b9db5ce3eea4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\windows">
+      <UniqueIdentifier>{e1a2d5d8-fb7a-41f3-819e-289dec928424}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{de23dc47-b761-4d27-a9bd-8ca99e1305ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\interface">
+      <UniqueIdentifier>{8541e8c6-f7e0-4ae1-a83a-c20f07bb35da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application">
+      <UniqueIdentifier>{fc134a3e-5491-45c5-8f58-312f2ae9c706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\interface">
+      <UniqueIdentifier>{1c25ee28-87e0-4fc7-9580-4f19a45bb3e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{3a43d2c8-1260-46e5-8504-26f4f0ad9727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\render_object">
+      <UniqueIdentifier>{ba329773-a661-47d4-b8bb-bd108836a92e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\render_object\interface">
+      <UniqueIdentifier>{193ddede-e9d0-42d3-b3c1-782f579549a7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="platform\windows\main.cpp">
+      <Filter>platform\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="application\application.cpp">
+      <Filter>application</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\windows\windows_displayer.cpp">
+      <Filter>platform\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\windows\windows_device.cpp">
+      <Filter>platform\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\windows\windows_render_target.cpp">
+      <Filter>platform\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\main_renderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\render_object\color_triangle.cpp">
+      <Filter>renderer\render_object</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\windows\windows_buffer.cpp">
+      <Filter>platform\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\render_object\render_object.cpp">
+      <Filter>renderer\render_object</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\windows\windows_input_layout.cpp">
+      <Filter>platform\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\windows\windows_shader.cpp">
+      <Filter>platform\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="common\utils.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\windows\windows_constant.cpp">
+      <Filter>platform\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\windows\windows_pipeline_state.cpp">
+      <Filter>platform\windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="application\interface\application.h">
+      <Filter>application\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\interface\device.h">
+      <Filter>platform\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\windows\windows_device.h">
+      <Filter>platform\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\interface\displayer.h">
+      <Filter>platform\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\windows\windows_displayer.h">
+      <Filter>platform\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="common\utils.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\interface\render_target.h">
+      <Filter>platform\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\windows\windows_render_target.h">
+      <Filter>platform\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\interface\main_renderer.h">
+      <Filter>renderer\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\interface\renderer.h">
+      <Filter>renderer\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="common\vec.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\mat.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\interface\shader.h">
+      <Filter>platform\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\interface\pipeline_state.h">
+      <Filter>platform\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\interface\buffer.h">
+      <Filter>platform\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\render_object\interface\render_object.h">
+      <Filter>renderer\render_object\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\render_object\interface\color_triangle.h">
+      <Filter>renderer\render_object\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="common\color.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\windows\windows_buffer.h">
+      <Filter>platform\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\interface\input_layout.h">
+      <Filter>platform\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\windows\windows_input_layout.h">
+      <Filter>platform\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\windows\windows_shader.h">
+      <Filter>platform\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\interface\constant.h">
+      <Filter>platform\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\windows\windows_constant.h">
+      <Filter>platform\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\windows\windows_pipeline_state.h">
+      <Filter>platform\windows</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\quad_ps.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\quad_vs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\quad_ds.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\quad_hs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\particle_system_ps.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\particle_system_vs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\particle_system_gs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\matrix_mul_cs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\particle_system_gsso.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\test_ps.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\test_vs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,13 @@
+#pragma once
+
+enum VertexFormat
+{
+	VERTEX_FORMAT_R32G32B32_FLOAT,
+	VERTEX_FORMAT_SIZE
+};
+
+enum PrimitiveTopology
+{
+	PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+	PRIMITIVE_TOPOLOGY_SIZE
+};
