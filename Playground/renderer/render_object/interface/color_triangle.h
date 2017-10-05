@@ -13,14 +13,15 @@ namespace playground
 	class IInputLayout;
 	class IShader;
 	class IPipelineState;
+	class IDevice;
 	class MainRenderer;
 
-	class ColorTriangle : public RenderObject
+	class ColorTriangle : public IRenderObject
 	{
 	public:
 		ColorTriangle(std::shared_ptr<MainRenderer> main_renderer, 
 			const Vec3f& p0, const Vec3f& c0, const Vec3f& p1, const Vec3f& c1, const Vec3f& p2, const Vec3f& c2);
-		virtual void Draw() override;
+		virtual void Draw(std::shared_ptr<IDevice> device) override;
 	private:
 		struct VertexType
 		{

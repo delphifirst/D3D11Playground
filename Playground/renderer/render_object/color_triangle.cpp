@@ -16,7 +16,6 @@ namespace playground
 {
 	ColorTriangle::ColorTriangle(shared_ptr<MainRenderer> main_renderer, 
 		const Vec3f& p0, const Vec3f& c0, const Vec3f& p1, const Vec3f& c1, const Vec3f& p2, const Vec3f& c2)
-		: RenderObject(main_renderer)
 	{
 		array<VertexType, 3> vertices;
 
@@ -37,14 +36,14 @@ namespace playground
 		input_layout_ = main_renderer->GetDevice()->CreateInputLayout(desc, vertex_shader_);
 		pipeline_state_ = main_renderer->GetDevice()->CreatePipelineState();
 	}
-	void ColorTriangle::Draw()
+	void ColorTriangle::Draw(shared_ptr<IDevice> device)
 	{
-		main_renderer_->GetDevice()->SetPrimitiveTopology(PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		main_renderer_->GetDevice()->SetInputLayout(input_layout_);
-		main_renderer_->GetDevice()->SetVertexBuffer({ vertex_buffer_ }, { sizeof(VertexType) });
-		main_renderer_->GetDevice()->SetVertexShader(vertex_shader_);
-		main_renderer_->GetDevice()->SetPixelShader(pixel_shader_);
-		main_renderer_->GetDevice()->SetPipelineState(pipeline_state_);
-		main_renderer_->GetDevice()->Draw(3, 0);
+		device->SetPrimitiveTopology(PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		device->SetInputLayout(input_layout_);
+		device->SetVertexBuffer({ vertex_buffer_ }, { sizeof(VertexType) });
+		device->SetVertexShader(vertex_shader_);
+		device->SetPixelShader(pixel_shader_);
+		device->SetPipelineState(pipeline_state_);
+		device->Draw(3, 0);
 	}
 }

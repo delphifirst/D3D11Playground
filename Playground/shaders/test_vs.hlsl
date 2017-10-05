@@ -1,3 +1,8 @@
+cbuffer GlobalVS : register(b0)
+{
+	float4x4 view_proj;
+}
+
 struct VSInput
 {
 	float3 position: POSITION;
@@ -13,8 +18,7 @@ struct VSOutput
 VSOutput main(VSInput input)
 {
 	VSOutput output;
-	output.position.xyz = input.position;
-	output.position.w = 1;
+	output.position = float4(input.position, 1);
 	output.color = input.color;
 	return output;
 }

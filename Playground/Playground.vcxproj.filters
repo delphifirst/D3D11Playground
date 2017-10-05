@@ -34,6 +34,9 @@
     <Filter Include="renderer\render_object\interface">
       <UniqueIdentifier>{193ddede-e9d0-42d3-b3c1-782f579549a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common\interface">
+      <UniqueIdentifier>{3500ce7b-8467-4951-8d45-d2357da1acd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\windows\main.cpp">
@@ -60,23 +63,20 @@
     <ClCompile Include="platform\windows\windows_buffer.cpp">
       <Filter>platform\windows</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\render_object\render_object.cpp">
-      <Filter>renderer\render_object</Filter>
-    </ClCompile>
     <ClCompile Include="platform\windows\windows_input_layout.cpp">
       <Filter>platform\windows</Filter>
     </ClCompile>
     <ClCompile Include="platform\windows\windows_shader.cpp">
       <Filter>platform\windows</Filter>
     </ClCompile>
-    <ClCompile Include="common\utils.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClCompile Include="platform\windows\windows_constant.cpp">
       <Filter>platform\windows</Filter>
     </ClCompile>
     <ClCompile Include="platform\windows\windows_pipeline_state.cpp">
       <Filter>platform\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="common\utils.cpp">
+      <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +95,6 @@
     <ClInclude Include="platform\windows\windows_displayer.h">
       <Filter>platform\windows</Filter>
     </ClInclude>
-    <ClInclude Include="common\utils.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="platform\interface\render_target.h">
       <Filter>platform\interface</Filter>
     </ClInclude>
@@ -106,15 +103,6 @@
     </ClInclude>
     <ClInclude Include="renderer\interface\main_renderer.h">
       <Filter>renderer\interface</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\interface\renderer.h">
-      <Filter>renderer\interface</Filter>
-    </ClInclude>
-    <ClInclude Include="common\vec.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="common\mat.h">
-      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="platform\interface\shader.h">
       <Filter>platform\interface</Filter>
@@ -130,9 +118,6 @@
     </ClInclude>
     <ClInclude Include="renderer\render_object\interface\color_triangle.h">
       <Filter>renderer\render_object\interface</Filter>
-    </ClInclude>
-    <ClInclude Include="common\color.h">
-      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="platform\windows\windows_buffer.h">
       <Filter>platform\windows</Filter>
@@ -155,35 +140,20 @@
     <ClInclude Include="platform\windows\windows_pipeline_state.h">
       <Filter>platform\windows</Filter>
     </ClInclude>
+    <ClInclude Include="common\interface\color.h">
+      <Filter>common\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="common\interface\mat.h">
+      <Filter>common\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="common\interface\utils.h">
+      <Filter>common\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="common\interface\vec.h">
+      <Filter>common\interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\quad_ps.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\quad_vs.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\quad_ds.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\quad_hs.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\particle_system_ps.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\particle_system_vs.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\particle_system_gs.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\matrix_mul_cs.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\particle_system_gsso.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
     <FxCompile Include="shaders\test_ps.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>

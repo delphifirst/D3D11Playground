@@ -15,12 +15,12 @@ namespace playground
 	void MainRenderer::Render(float delta_time)
 	{
 		device_->Clear(0, 0.1, 0.2, 1);
-		for (shared_ptr<RenderObject> render_object : render_objects_)
-			render_object->Draw();
+		for (shared_ptr<IRenderObject> render_object : render_objects_)
+			render_object->Draw(device_);
 		device_->Present();
 	}
 
-	void MainRenderer::AddRenderObject(shared_ptr<RenderObject> render_object)
+	void MainRenderer::AddRenderObject(shared_ptr<IRenderObject> render_object)
 	{
 		render_objects_.push_back(render_object);
 	}

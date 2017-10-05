@@ -3,26 +3,25 @@
 #include <memory>
 #include <vector>
 
-#include "renderer.h"
-
 namespace playground
 {
-	class RenderObject;
+	class IRenderObject;
+	class IDevice;
 
-	class MainRenderer :public IRenderer
+	class MainRenderer
 	{
 	public:
-		virtual void Init(std::shared_ptr<IDevice> device) override;
-		virtual std::shared_ptr<IDevice> GetDevice() override
+		virtual void Init(std::shared_ptr<IDevice> device);
+		std::shared_ptr<IDevice> GetDevice()
 		{
 			return device_;
 		}
-		virtual void Render(float delta_time) override;
+		virtual void Render(float delta_time);
 
-		void AddRenderObject(std::shared_ptr<RenderObject> render_object);
+		void AddRenderObject(std::shared_ptr<IRenderObject> render_object);
 	private:
 		std::shared_ptr<IDevice> device_;
 
-		std::vector<std::shared_ptr<RenderObject>> render_objects_;
+		std::vector<std::shared_ptr<IRenderObject>> render_objects_;
 	};
 }

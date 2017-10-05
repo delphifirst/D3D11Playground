@@ -4,14 +4,11 @@
 
 namespace playground
 {
-	class MainRenderer;
+	class IDevice;
 
-	class RenderObject
+	class IRenderObject
 	{
 	public:
-		RenderObject(std::shared_ptr<MainRenderer> main_renderer);
-		virtual void Draw() = 0;
-	protected:
-		std::shared_ptr<MainRenderer> main_renderer_;
+		virtual void Draw(std::shared_ptr<IDevice> device) = 0;
 	};
 }
