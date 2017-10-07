@@ -5,6 +5,7 @@
 
 namespace playground
 {
+	class Camera;
 	class IRenderObject;
 	class IDevice;
 
@@ -16,7 +17,7 @@ namespace playground
 		{
 			return device_;
 		}
-		virtual void Render(float delta_time);
+		virtual void Render(std::shared_ptr<Camera> camera, float delta_time);
 
 		void AddRenderObject(std::shared_ptr<IRenderObject> render_object);
 	private:

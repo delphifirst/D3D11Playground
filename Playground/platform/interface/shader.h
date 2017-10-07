@@ -21,5 +21,7 @@ namespace playground
 
 		virtual std::string GetName() const = 0;
 		virtual ShaderType GetType() const = 0;
+
+		virtual void SetVariable(const std::string& name, const void* data) = 0;
 	};
 }

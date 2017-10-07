@@ -4,11 +4,13 @@
 
 namespace playground
 {
-	class IDevice;
+	class MainRenderer;
+	class Camera;
 
 	class IRenderObject
 	{
 	public:
-		virtual void Draw(std::shared_ptr<IDevice> device) = 0;
+		virtual void PreDraw(MainRenderer* main_renderer) = 0;
+		virtual void Draw(MainRenderer* main_renderer, Camera* camera) = 0;
 	};
 }

@@ -247,7 +247,7 @@ namespace playground
 	const TVec3<T> operator*(T lhs, const TVec3<T>& rhs)
 	{
 		TVec3<T> result = rhs;
-		result *= lsh;
+		result *= lhs;
 		return result;
 	}
 	template<typename T>

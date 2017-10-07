@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 #include "vec.h"
 
 namespace playground
@@ -82,7 +84,7 @@ namespace playground
 				{
 					if (src_col == col)
 						continue;
-					remain_mat[3 * i + j] = mat4.get(m, src_row, src_col);
+					remain_mat[3 * i + j] = (*this)(src_row, src_col);
 					++j;
 				}
 				++i;
@@ -120,12 +122,47 @@ namespace playground
 			return cofactor_matrix / Det();
 		}
 
+		const void* GetData() const
+		{
+			return this;
+		}
+
 		// Matrix creators
 		static const TMat4x4 Identity()
 		{
 			return TMat4x4(
 				TVec4<T>(1, 0, 0, 0),
 				TVec4<T>(0, 1, 0, 0),
+				TVec4<T>(0, 0, 1, 0),
+				TVec4<T>(0, 0, 0, 1));
+		}
+		static const TMat4x4 Translation(const TVec3<T>& position)
+		{
+			TMat4x4 result = Identity();
+			result.cols[3] = TVec4<T>(position, 1);
+			return result;
+		}
+		static const TMat4x4 RotationX(float angle)
+		{
+			return TMat4x4(
+				TVec4<T>(1, 0, 0, 0),
+				TVec4<T>(0, cos(angle), sin(angle), 0),
+				TVec4<T>(0, -sin(angle), cos(angle), 0),
+				TVec4<T>(0, 0, 0, 1));
+		}
+		static const TMat4x4 RotationY(float angle)
+		{
+			return TMat4x4(
+				TVec4<T>(cos(angle), 0, -sin(angle), 0),
+				TVec4<T>(0, 1, 0, 0),
+				TVec4<T>(sin(angle), 0, cos(angle), 0),
+				TVec4<T>(0, 0, 0, 1));
+		}
+		static const TMat4x4 RotationZ(float angle)
+		{
+			return TMat4x4(
+				TVec4<T>(cos(angle), sin(angle), 0, 0),
+				TVec4<T>(-sin(angle), cos(angle), 0, 0),
 				TVec4<T>(0, 0, 1, 0),
 				TVec4<T>(0, 0, 0, 1));
 		}

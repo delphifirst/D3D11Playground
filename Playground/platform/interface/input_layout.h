@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "constant.h"
+#include "platform_constant.h"
 
 namespace playground
 {

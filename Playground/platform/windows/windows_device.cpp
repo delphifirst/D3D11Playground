@@ -17,27 +17,29 @@ using namespace std;
 
 namespace playground
 {
-	shared_ptr<IDevice> CreateDevice()
+	shared_ptr<IDevice> gDevice;
+	shared_ptr<WindowsDevice> gWindowsDevice;
+
+	void CreateDevice()
 	{
-		return make_shared<WindowsDevice>();
+		gWindowsDevice = make_shared<WindowsDevice>();
+		gDevice = gWindowsDevice;
 	}
 
-	void WindowsDevice::Init(shared_ptr<IDisplayer> displayer)
+	void WindowsDevice::Init()
 	{
 		SetupConstantMap();
-
-		displayer_ = displayer;
 
 		DXGI_SWAP_CHAIN_DESC swap_chain_desc;
 		ZeroMemory(&swap_chain_desc, sizeof(swap_chain_desc));
 		swap_chain_desc.BufferCount = 1;
-		swap_chain_desc.BufferDesc.Width = displayer->GetHeight();
-		swap_chain_desc.BufferDesc.Height = displayer->GetWidth();
+		swap_chain_desc.BufferDesc.Width = gDisplayer->GetHeight();
+		swap_chain_desc.BufferDesc.Height = gDisplayer->GetWidth();
 		swap_chain_desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		swap_chain_desc.BufferDesc.RefreshRate.Numerator = 60;
 		swap_chain_desc.BufferDesc.RefreshRate.Denominator = 1;
 		swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swap_chain_desc.OutputWindow = static_cast<HWND>(displayer->GetHandle());
+		swap_chain_desc.OutputWindow = static_cast<HWND>(gDisplayer->GetHandle());
 		swap_chain_desc.SampleDesc.Count = 1;
 		swap_chain_desc.SampleDesc.Quality = 0;
 		swap_chain_desc.Windowed = true;
@@ -56,7 +58,7 @@ namespace playground
 			&device_, nullptr, &device_context_);
 		assert(SUCCEEDED(hr));
 
-		CreateDefaultRenderTarget(displayer->GetWidth(), displayer->GetHeight());
+		CreateDefaultRenderTarget(gDisplayer->GetWidth(), gDisplayer->GetHeight());
 		SetRenderTarget(default_render_target_);
 	}
 
@@ -100,6 +102,77 @@ namespace playground
 		SafeRelease(depth_stencil_buffer);
 
 		default_render_target_ = make_shared<WindowsRenderTarget>(width, height, render_target_view, depth_stencil_view);
+	}
+
+	void WindowsDevice::PrepareShaderReflection(const vector<char>& code, 
+		ID3D11ShaderReflection** shader_reflection, int* constant_buffer_size)
+	{
+		ID3D11ShaderReflection* reflection;
+		D3DReflect(code.data(), code.size(), IID_ID3D11ShaderReflection, reinterpret_cast<void**>(&reflection));
+		ID3D11ShaderReflectionConstantBuffer* constant_reflection = reflection->GetConstantBufferByName("Global");
+		D3D11_SHADER_BUFFER_DESC desc;
+		HRESULT hr = constant_reflection->GetDesc(&desc);
+		if (hr == E_FAIL)
+		{
+			// Cannot find cbuffer Global
+			*constant_buffer_size = 0;
+			*shader_reflection = nullptr;
+		}
+		else
+		{
+			assert(SUCCEEDED(hr));
+			*constant_buffer_size = desc.Size;
+			*shader_reflection = reflection;
+		}
+	}
+
+	void WindowsDevice::PrepareConstantBuffer(int length, ID3D11Buffer** constant_buffer)
+	{
+		if (length == 0)
+		{
+			*constant_buffer = nullptr;
+		}
+		else
+		{
+			D3D11_BUFFER_DESC desc;
+			desc.Usage = D3D11_USAGE_DYNAMIC;
+			desc.ByteWidth = length;
+			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			desc.MiscFlags = 0;
+			desc.StructureByteStride = 0;
+
+			ID3D11Buffer* buffer;
+			HRESULT hr = device_->CreateBuffer(&desc, nullptr, &buffer);
+			assert(SUCCEEDED(hr));
+			*constant_buffer = buffer;
+		}
+	}
+
+	template<typename T>
+	void WindowsDevice::UpdateConstantBuffer(shared_ptr<WindowsShader<T>> shader)
+	{
+		ID3D11Buffer* gpu_buffer = shader->GetGpuConstantBuffer();
+		if (gpu_buffer)
+		{
+			const vector<char>& cpu_buffer = shader->GetCpuConstantBuffer();
+			D3D11_MAPPED_SUBRESOURCE mapped_data;
+			HRESULT hr = device_context_->Map(gpu_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_data);
+			assert(SUCCEEDED(hr));
+			memcpy(mapped_data.pData, cpu_buffer.data(), cpu_buffer.size());
+			device_context_->Unmap(gpu_buffer, 0);
+			switch (shader->GetType())
+			{
+			case VERTEX_SHADER:
+				device_context_->VSSetConstantBuffers(shader->GetConstantBufferSlot(), 1, &gpu_buffer);
+				break;
+			case PIXEL_SHADER:
+				device_context_->PSSetConstantBuffers(shader->GetConstantBufferSlot(), 1, &gpu_buffer);
+				break;
+			default:
+				assert(0);
+			}
+		}
 	}
 
 	shared_ptr<IVertexBuffer> WindowsDevice::CreateVertexBuffer(void* init_data, int length)
@@ -148,8 +221,14 @@ namespace playground
 		ID3D11VertexShader* shader;
 		HRESULT hr = device_->CreateVertexShader(code.data(), code.size(), nullptr, &shader);
 		assert(SUCCEEDED(hr));
+
+		ID3D11ShaderReflection* shader_reflection;
+		ID3D11Buffer* constant_buffer;
+		int constant_buffer_size;
+		PrepareShaderReflection(code, &shader_reflection, &constant_buffer_size);
+		PrepareConstantBuffer(constant_buffer_size, &constant_buffer);
 		
-		return make_shared<WindowsShader<ID3D11VertexShader>>(name, code, shader);
+		return make_shared<WindowsShader<ID3D11VertexShader>>(name, code, shader, shader_reflection, constant_buffer, constant_buffer_size);
 	}
 
 	shared_ptr<IShader> WindowsDevice::CreatePixelShader(const string& name, const std::vector<char>& code)
@@ -158,7 +237,13 @@ namespace playground
 		HRESULT hr = device_->CreatePixelShader(code.data(), code.size(), nullptr, &shader);
 		assert(SUCCEEDED(hr));
 
-		return make_shared<WindowsShader<ID3D11PixelShader>>(name, code, shader);
+		ID3D11ShaderReflection* shader_reflection;
+		ID3D11Buffer* constant_buffer;
+		int constant_buffer_size;
+		PrepareShaderReflection(code, &shader_reflection, &constant_buffer_size);
+		PrepareConstantBuffer(constant_buffer_size, &constant_buffer);
+
+		return make_shared<WindowsShader<ID3D11PixelShader>>(name, code, shader, shader_reflection, constant_buffer, constant_buffer_size);
 	}
 
 	shared_ptr<IPipelineState> WindowsDevice::CreatePipelineState()
@@ -249,11 +334,13 @@ namespace playground
 	{
 		shared_ptr<WindowsShader<ID3D11VertexShader>> shader = static_pointer_cast<WindowsShader<ID3D11VertexShader>>(vertex_shader);
 		device_context_->VSSetShader(shader->GetShader(), nullptr, 0);
+		UpdateConstantBuffer(shader);
 	}
 	void WindowsDevice::SetPixelShader(shared_ptr<IShader> pixel_shader)
 	{
 		shared_ptr<WindowsShader<ID3D11PixelShader>> shader = static_pointer_cast<WindowsShader<ID3D11PixelShader>>(pixel_shader);
 		device_context_->PSSetShader(shader->GetShader(), nullptr, 0);
+		UpdateConstantBuffer(shader);
 	}
 
 	void WindowsDevice::SetVertexBuffer(const vector<shared_ptr<IVertexBuffer>>& vertex_buffers, const vector<int> vertex_strides)

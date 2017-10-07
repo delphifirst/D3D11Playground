@@ -107,7 +107,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;d3dcompiler.lib;d3d11.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -145,7 +145,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;d3dcompiler.lib;d3d11.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -159,7 +159,7 @@
     <ClCompile Include="platform\windows\windows_pipeline_state.cpp" />
     <ClCompile Include="platform\windows\windows_render_target.cpp" />
     <ClCompile Include="platform\windows\windows_buffer.cpp" />
-    <ClCompile Include="platform\windows\windows_shader.cpp" />
+    <ClCompile Include="renderer\camera.cpp" />
     <ClCompile Include="renderer\main_renderer.cpp" />
     <ClCompile Include="renderer\render_object\color_triangle.cpp" />
   </ItemGroup>
@@ -167,11 +167,12 @@
     <ClInclude Include="application\interface\application.h" />
     <ClInclude Include="common\interface\color.h" />
     <ClInclude Include="common\interface\mat.h" />
+    <ClInclude Include="common\interface\math_constant.h" />
     <ClInclude Include="common\interface\utils.h" />
     <ClInclude Include="common\interface\vec.h" />
     <ClInclude Include="platform\interface\device.h" />
     <ClInclude Include="platform\interface\displayer.h" />
-    <ClInclude Include="platform\interface\constant.h" />
+    <ClInclude Include="platform\interface\platform_constant.h" />
     <ClInclude Include="platform\interface\input_layout.h" />
     <ClInclude Include="platform\interface\pipeline_state.h" />
     <ClInclude Include="platform\interface\render_target.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="platform\windows\windows_render_target.h" />
     <ClInclude Include="platform\windows\windows_buffer.h" />
     <ClInclude Include="platform\windows\windows_shader.h" />
+    <ClInclude Include="renderer\interface\camera.h" />
     <ClInclude Include="renderer\interface\main_renderer.h" />
     <ClInclude Include="renderer\render_object\interface\color_triangle.h" />
     <ClInclude Include="renderer\render_object\interface\render_object.h" />

@@ -4,7 +4,7 @@
 
 #include <d3d11.h>
 
-#include "constant.h"
+#include "platform_constant.h"
 
 namespace playground
 {

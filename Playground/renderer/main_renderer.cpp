@@ -7,16 +7,18 @@ using namespace std;
 
 namespace playground
 {
-	void MainRenderer::Init(std::shared_ptr<IDevice> device)
+	void MainRenderer::Init(shared_ptr<IDevice> device)
 	{
 		device_ = device;
 	}
 
-	void MainRenderer::Render(float delta_time)
+	void MainRenderer::Render(shared_ptr<Camera> camera, float delta_time)
 	{
 		device_->Clear(0, 0.1, 0.2, 1);
 		for (shared_ptr<IRenderObject> render_object : render_objects_)
-			render_object->Draw(device_);
+			render_object->PreDraw(this);
+		for (shared_ptr<IRenderObject> render_object : render_objects_)
+			render_object->Draw(this, camera.get());
 		device_->Present();
 	}
 

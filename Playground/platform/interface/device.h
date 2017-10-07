@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "constant.h"
+#include "platform_constant.h"
 
 namespace playground
 {
@@ -18,7 +18,7 @@ namespace playground
 	class IDevice
 	{
 	public:
-		virtual void Init(std::shared_ptr<IDisplayer> displayer) = 0;
+		virtual void Init() = 0;
 		virtual void Fini() = 0;
 
 		virtual std::shared_ptr<IVertexBuffer> CreateVertexBuffer(void* init_data, int length) = 0;
@@ -41,5 +41,6 @@ namespace playground
 		virtual void Present() = 0;
 	};
 
-	std::shared_ptr<IDevice> CreateDevice();
+	void CreateDevice();
+	extern std::shared_ptr<IDevice> gDevice;
 }

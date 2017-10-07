@@ -3,6 +3,7 @@
 #include <memory>
 
 #include <d3d11.h>
+#include <d3dcompiler.h>
 
 #include "device.h"
 
@@ -10,10 +11,13 @@
 
 namespace playground
 {
+	template<typename T>
+	class WindowsShader;
+
 	class WindowsDevice : public IDevice
 	{
 	public:
-		virtual void Init(std::shared_ptr<IDisplayer> displayer) override;
+		virtual void Init() override;
 		virtual void Fini() override;
 
 		virtual std::shared_ptr<IVertexBuffer> CreateVertexBuffer(void* init_data, int length) override;
@@ -36,7 +40,11 @@ namespace playground
 		virtual void Present() override;
 	private:
 		void CreateDefaultRenderTarget(int width, int height);
-		std::shared_ptr<IDisplayer> displayer_;
+		void PrepareShaderReflection(const std::vector<char>& code, 
+			ID3D11ShaderReflection** shader_reflection, int* constant_buffer_size);
+		void PrepareConstantBuffer(int length, ID3D11Buffer** constant_buffer);
+		template<typename T>
+		void UpdateConstantBuffer(std::shared_ptr<WindowsShader<T>> shader);
 		std::shared_ptr<WindowsRenderTarget> default_render_target_;
 		std::shared_ptr<WindowsRenderTarget> current_render_target_;
 
@@ -44,4 +52,6 @@ namespace playground
 		ID3D11DeviceContext* device_context_ = nullptr;
 		IDXGISwapChain* swap_chain_ = nullptr;
 	};
+
+	extern std::shared_ptr<WindowsDevice> gWindowsDevice;
 }
