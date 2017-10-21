@@ -194,6 +194,25 @@ namespace playground
 		return make_shared<WindowsVertexBuffer>(length, buffer);
 	}
 
+	shared_ptr<IIndexBuffer> WindowsDevice::CreateIndexBuffer(void* init_data, int length, IndexBufferType type)
+	{
+		D3D11_BUFFER_DESC desc;
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.ByteWidth = length;
+		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = 0;
+		desc.StructureByteStride = 0;
+
+		ID3D11Buffer* buffer;
+		D3D11_SUBRESOURCE_DATA subres_data;
+		subres_data.pSysMem = init_data;
+		HRESULT hr = device_->CreateBuffer(&desc, init_data ? &subres_data : nullptr, &buffer);
+		assert(SUCCEEDED(hr));
+
+		return make_shared<WindowsIndexBuffer>(length, type, buffer);
+	}
+
 	shared_ptr<IInputLayout> WindowsDevice::CreateInputLayout(
 		const vector<InputElementDesc>& input_desc, shared_ptr<IShader> vertex_shader)
 	{
@@ -203,7 +222,7 @@ namespace playground
 		{
 			desc[i].SemanticName = input_desc[i].name.c_str();
 			desc[i].SemanticIndex = 0;
-			desc[i].Format = static_cast<DXGI_FORMAT>(gFormatMap[input_desc[i].format]);
+			desc[i].Format = static_cast<DXGI_FORMAT>(gVertexFormatMap[input_desc[i].format]);
 			desc[i].InputSlot = input_desc[i].slot;
 			desc[i].AlignedByteOffset = input_desc[i].byte_offset;
 			desc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
@@ -361,6 +380,15 @@ namespace playground
 		device_context_->IASetVertexBuffers(0, buffer_count, buffers.data(), strides.data(), offsets.data());
 	}
 
+	void WindowsDevice::SetIndexBuffer(shared_ptr<IIndexBuffer> index_buffer)
+	{
+		shared_ptr<WindowsIndexBuffer> windows_index_buffer = static_pointer_cast<WindowsIndexBuffer>(index_buffer);
+		if (index_buffer->GetType() == INDEX_FORMAT_UINT16)
+			device_context_->IASetIndexBuffer(windows_index_buffer->GetBuffer(), DXGI_FORMAT_R16_UINT, 0);
+		else
+			device_context_->IASetIndexBuffer(windows_index_buffer->GetBuffer(), DXGI_FORMAT_R32_UINT, 0);
+	}
+
 	void WindowsDevice::SetPipelineState(shared_ptr<IPipelineState> pipeline_state)
 	{
 		shared_ptr<WindowsPipelineState> state = static_pointer_cast<WindowsPipelineState>(pipeline_state);
@@ -381,6 +409,11 @@ namespace playground
 	void WindowsDevice::Draw(int vertex_count, int start_vertex_location)
 	{
 		device_context_->Draw(vertex_count, start_vertex_location);
+	}
+
+	void WindowsDevice::DrawIndexed(int index_count, int start_index_location, int base_vertex_location)
+	{
+		device_context_->DrawIndexed(index_count, start_index_location, base_vertex_location);
 	}
 
 	void WindowsDevice::Present()

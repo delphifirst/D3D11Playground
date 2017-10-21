@@ -78,6 +78,9 @@
     <ClCompile Include="renderer\camera.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\render_object\color_cube.cpp">
+      <Filter>renderer\render_object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\interface\application.h">
@@ -158,12 +161,21 @@
     <ClInclude Include="common\interface\math_constant.h">
       <Filter>common\interface</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\render_object\interface\color_cube.h">
+      <Filter>renderer\render_object\interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders\test_ps.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
     <FxCompile Include="shaders\test_vs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\color_ps.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\color_vs.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>

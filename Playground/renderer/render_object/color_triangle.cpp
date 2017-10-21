@@ -1,7 +1,5 @@
 #include "color_triangle.h"
 
-#include <fstream>
-
 #include "buffer.h"
 #include "main_renderer.h"
 #include "device.h"

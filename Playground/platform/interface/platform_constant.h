@@ -6,6 +6,12 @@ enum VertexFormat
 	VERTEX_FORMAT_SIZE
 };
 
+enum IndexBufferType
+{
+	INDEX_FORMAT_UINT16,
+	INDEX_FORMAT_UINT32
+};
+
 enum PrimitiveTopology
 {
 	PRIMITIVE_TOPOLOGY_TRIANGLELIST,

@@ -21,6 +21,7 @@ namespace playground
 		virtual void Fini() override;
 
 		virtual std::shared_ptr<IVertexBuffer> CreateVertexBuffer(void* init_data, int length) override;
+		virtual std::shared_ptr<IIndexBuffer> CreateIndexBuffer(void* init_data, int length, IndexBufferType type) override;
 		virtual std::shared_ptr<IInputLayout> CreateInputLayout(
 			const std::vector<InputElementDesc>& input_desc, std::shared_ptr<IShader> vertex_shader) override;
 		virtual std::shared_ptr<IShader> CreateVertexShader(const std::string& name, const std::vector<char>& code) override;
@@ -33,10 +34,12 @@ namespace playground
 		virtual void SetVertexShader(std::shared_ptr<IShader> vertex_shader) override;
 		virtual void SetPixelShader(std::shared_ptr<IShader> pixel_shader) override;
 		virtual void SetVertexBuffer(const std::vector<std::shared_ptr<IVertexBuffer>>& vertex_buffers, const std::vector<int> vertex_strides) override;
+		virtual void SetIndexBuffer(std::shared_ptr<IIndexBuffer> index_buffer) override;
 		virtual void SetPipelineState(std::shared_ptr<IPipelineState> pipeline_state) override;
 
 		virtual void Clear(float r, float g, float b, float a) override;
 		virtual void Draw(int vertex_count, int start_vertex_location) override;
+		virtual void DrawIndexed(int index_count, int start_index_location, int base_vertex_location) override;
 		virtual void Present() override;
 	private:
 		void CreateDefaultRenderTarget(int width, int height);

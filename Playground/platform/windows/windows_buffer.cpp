@@ -14,4 +14,15 @@ namespace playground
 	{
 		SafeRelease(buffer_);
 	}
+
+	WindowsIndexBuffer::WindowsIndexBuffer(int length, IndexBufferType type, ID3D11Buffer* buffer)
+		:length_(length), type_(type), buffer_(buffer)
+	{
+
+	}
+
+	WindowsIndexBuffer::~WindowsIndexBuffer()
+	{
+		SafeRelease(buffer_);
+	}
 }

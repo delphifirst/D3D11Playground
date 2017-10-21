@@ -138,9 +138,19 @@ namespace playground
 		}
 		static const TMat4x4 Translation(const TVec3<T>& position)
 		{
-			TMat4x4 result = Identity();
-			result.cols[3] = TVec4<T>(position, 1);
-			return result;
+			return TMat4x4(
+				TVec4<T>(1, 0, 0, 0),
+				TVec4<T>(0, 1, 0, 0),
+				TVec4<T>(0, 0, 1, 0),
+				TVec4<T>(position, 1));
+		}
+		static const TMat4x4 Scale(const TVec3<T>& scale)
+		{
+			return TMat4x4(
+				TVec4<T>(scale.x, 0, 0, 0),
+				TVec4<T>(0, scale.y, 0, 0),
+				TVec4<T>(0, 0, scale.z, 0),
+				TVec4<T>(0, 0, 0, 1));
 		}
 		static const TMat4x4 RotationX(float angle)
 		{

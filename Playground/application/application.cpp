@@ -9,6 +9,7 @@
 #include "main_renderer.h"
 #include "camera.h"
 #include "color_triangle.h"
+#include "color_cube.h"
 #include "color.h"
 #include "vec.h"
 #include "math_constant.h"
@@ -108,6 +109,10 @@ namespace playground
 		main_renderer->Init(gDevice);
 		main_renderer->AddRenderObject(make_shared<ColorTriangle>(
 			Vec3f(0, 0, 0), Vec3f(1, 0, 0), Vec3f(0.5, 0, 0), Vec3f(0, 1, 0), Vec3f(0, 0.5, 0), Vec3f(0, 0, 1)));
+		shared_ptr<ColorCube> color_cube = make_shared<ColorCube>(Vec3f(1, 0, 0));
+		color_cube->SetPosition(Vec3f(2, 0, 0));
+		main_renderer->AddRenderObject(color_cube);
+
 
 		shared_ptr<Camera> camera = make_shared<Camera>(kPi / 2, static_cast<float>(kWidth) / static_cast<float>(kHeight), 0.1f, 500.0f);
 		camera->SetPosition(Vec3f(0, 0, 3));
@@ -123,8 +128,10 @@ namespace playground
 		{
 			chrono::time_point<chrono::steady_clock> current_frame_time = chrono::steady_clock::now();
 			chrono::duration<float> delta_time = current_frame_time - last_frame_time;
+			float delta_time_count = delta_time.count();
 
-			event_listener->Tick(delta_time.count());
+			event_listener->Tick(delta_time_count);
+			color_cube->SetRotation(color_cube->GetRotation() + Vec3f(0, delta_time_count, 0));
 			main_renderer->Render(camera, delta_time.count());
 
 			last_frame_time = current_frame_time;
